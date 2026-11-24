@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Atelier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Figtree:wght@300;400;600;800&display=swap">
+<style>
+:root{--bg:#ffffff;--ink:#08080d;--card:#ffffff;--line:#e4e4e6;--rule:#ececee;--brass:#08080d;--brass-ink:#08080d;--muted:#6a6a72;--faint:#9a9aa2;--champ:#ffffff;--wash:#f3f3f4;--danger:#9a3b2e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a0c;--ink:#f4f4f2;--card:#0a0a0c;--line:#2a2a2e;--rule:#222226;--brass:#f4f4f2;--brass-ink:#f4f4f2;--muted:#a4a4ac;--faint:#7c7c84;--wash:#1a1a1d;--danger:#e08a78;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0a0c;--ink:#f4f4f2;--card:#0a0a0c;--line:#2a2a2e;--rule:#222226;--brass:#f4f4f2;--brass-ink:#f4f4f2;--muted:#a4a4ac;--faint:#7c7c84;--wash:#1a1a1d;--danger:#e08a78;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:300 15px/1.55 'Figtree',system-ui,sans-serif;padding-block:0 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3,.disp{font-family:'Newsreader',Georgia,serif;font-weight:500;margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brass-ink)}
+.mast{padding:28px 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.logo{font-size:44px;line-height:1;letter-spacing:.01em}.logo em{color:var(--brass);font-weight:400}
+.sub{color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--rule);overflow-x:auto;margin-bottom:26px}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;color:var(--muted);cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--brass)}
+.badge{display:inline-block;background:var(--wash);color:var(--brass-ink);font-size:11px;border-radius:9px;padding:0 7px;margin-left:6px}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.hero h2{font-size:64px;line-height:1;letter-spacing:-.01em}.hero p{color:var(--muted);margin:8px 0 0}
+.sec{margin:44px 0 16px;border-bottom:1px solid var(--rule);padding-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sec h3{font-size:34px;font-weight:400}.sec span{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:2px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.plate{height:160px;position:relative;display:flex;align-items:flex-end;padding:12px;color:#fff;overflow:hidden}
+.plate::before{content:"";position:absolute;inset:8px;border:1px solid rgba(255,255,255,.22)}
+.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate.tall{height:300px}
+.card.item .body h4{font-size:21px;line-height:1.15}
+.plate::before{z-index:1;pointer-events:none}
+.plate .cat{z-index:1}
+.plate:has(img)::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent 60%)}
+.plate .cat{position:relative;font-size:11px;letter-spacing:.04em;opacity:.85;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.plate .mono{position:absolute;right:14px;top:-6px;font:italic 400 92px/1 'Newsreader',serif;opacity:.16}
+.star{position:absolute;right:12px;bottom:10px;background:none;border:0;color:var(--champ);font-size:22px;cursor:pointer;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.done{position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:50%;border:1px solid var(--champ);color:var(--champ);background:rgba(0,0,0,.18);cursor:pointer;z-index:2;font-size:13px}
+.done.on{background:var(--champ);color:#3a2f1c}
+.body{padding:13px 15px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body h4{font:500 26px/1.1 'Newsreader',serif;margin:0}
+.note{color:var(--muted);font-size:13px;margin:0}
+.acts{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:6px;font-size:13px}
+.lnk{color:var(--brass-ink);text-decoration:none;border-bottom:1px solid var(--brass);padding-bottom:1px}
+.mini{background:none;border:0;padding:0;color:var(--faint);cursor:pointer;font-size:12px;text-decoration:underline}
+.tag{font-size:11px;color:var(--faint);margin-left:auto}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:5px 13px;cursor:pointer;font-size:13px;color:var(--muted)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn{background:var(--ink);color:var(--bg);border:0;border-radius:4px;padding:9px 18px;cursor:pointer;font-weight:400}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px;margin:14px 0}
+.form .wide{grid-column:1/-1}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%;min-width:0}
+label.f{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.empty{border:1px dashed var(--line);border-radius:6px;padding:26px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:500 24px 'Newsreader',serif;color:var(--ink);margin-bottom:4px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bar{height:6px;background:var(--wash);border-radius:3px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--brass)}
+.board{columns:3 190px;column-gap:12px}
+.pin{break-inside:avoid;margin:0 0 12px;background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.pin img{display:block;width:100%}.pin div{padding:8px 11px;font-size:13px;color:var(--muted)}
+.pin.pinterest{padding:14px;border-left:3px solid var(--danger)}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl td{padding:8px 4px;border-bottom:1px solid var(--rule)}
+.tbl td:last-child{text-align:right}
+.lib{display:flex;flex-wrap:wrap;gap:7px}
+.q h2{font-size:34px;margin-bottom:14px}
+.prose{white-space:pre-wrap;font:400 17px/1.6 'Newsreader',Georgia,serif;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.pill{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:12px;padding:1px 10px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:14px}
+.opt{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:64px}
+.opt b{font:500 22px/1.15 'Newsreader',serif}.opt span:not(.sw){color:var(--muted);font-size:13px}
+.opt[aria-pressed=true]{border-color:var(--brass);background:var(--wash);box-shadow:inset 0 0 0 1px var(--brass)}
+.sw{display:inline-flex;height:26px;width:112px;border-radius:2px;overflow:hidden;border:1px solid var(--line);margin-bottom:6px;vertical-align:middle}.sw i{flex:1}
+.sbtn{background:none;border:1px solid var(--line);border-radius:50%;width:30px;height:30px;cursor:pointer;color:var(--brass);font-size:15px;line-height:1;padding:0}
+.sbtn.on{background:var(--brass);border-color:var(--brass);color:var(--bg)}
+.card.src .body{padding:14px 16px 15px;gap:8px}
+.card.src .body h4{font-size:27px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:4px;font-size:13px;z-index:20}
+details summary{cursor:pointer;color:var(--brass-ink)}
+@media(max-width:520px){.hero h2{font-size:44px}.logo{font-size:34px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* black and white */
+body{font-weight:300;letter-spacing:.01em}
+.mast{justify-content:center;padding:34px 0 14px}
+.logo{font:800 28px 'Figtree',sans-serif;letter-spacing:.04em;text-align:center}
+.tabs{justify-content:center;gap:6px;margin-bottom:34px}
+.tab{text-transform:uppercase;font-size:12.5px;font-weight:600;letter-spacing:.08em;padding:12px 14px}
+.tab[aria-selected=true]{border-bottom-color:var(--ink)}
+.badge{background:var(--wash);color:var(--ink)}
+h1,h2,h3,h4,.disp{font-weight:300!important;letter-spacing:-.02em}
+.hero h2{font-size:72px;letter-spacing:-.035em}
+.hero p{font-size:16px}
+.sec{border:0;margin:64px 0 20px;padding:0}
+.sec h3{font-size:38px;letter-spacing:-.03em}
+.sec span{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+.bar{height:2px;background:var(--rule)}.bar i{background:var(--ink)}
+.btn{border-radius:999px;text-transform:uppercase;letter-spacing:.07em;font-size:12.5px;font-weight:600;padding:12px 24px}
+.btn.ghost{border:1px solid var(--ink)}
+.chip{background:var(--wash);border:0;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:500;color:var(--ink);padding:7px 15px}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.card{background:transparent;border:0;border-top:1px solid var(--ink);border-radius:0}
+.card.item{border-top:0}
+.card.src .body{padding:16px 0 22px}
+.card.src .body h4{font-size:30px}
+.sbtn{border-color:var(--ink);color:var(--ink)}.sbtn.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.lnk{text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:600;border-bottom:1px solid var(--ink);color:var(--ink)}
+.mini{color:var(--muted)}
+.plate{background:var(--wash)!important;color:var(--ink);border-radius:0}
+.plate::before{display:none}
+.plate .mono{color:var(--ink);opacity:.07}
+.plate .cat{color:var(--ink);text-shadow:none;font-size:12px}
+.plate:has(img)::after{display:none}
+.plate.tall{height:auto;aspect-ratio:4/5}
+.card.item .body{padding:12px 0 22px}
+.card.item .body h4{font-size:22px;line-height:1.15}
+.kick{margin:0;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.form{border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.empty{border-color:var(--line);border-radius:6px}
+.prose{border:0;border-left:2px solid var(--ink);border-radius:0;background:transparent;padding:4px 0 4px 18px}
+.opt{border-radius:0;border-color:var(--line)}
+.opt[aria-pressed=true]{background:var(--bg);border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.pill{border-color:var(--line)}
+.pin{border-radius:0}
+.toast{border-radius:999px}
+@media(max-width:520px){.hero h2{font-size:48px}.sec h3{font-size:32px}}
+</style>
+<div class="wrap" id="app"></div>
+<script>
+const CATS=['Vintage marketplaces','Vintage dealers','Rugs','New furniture','Lighting & hardware','Textiles, wallpaper & paint','Tile & stone','Art','Decor & ceramics','Outdoor','Resale & vintage','Designer new arrivals','Contemporary brands','Jewelry & accessories'];
+const PL=[['#34404f','#1b222c'],['#93523f','#5a2f25'],['#7b8548','#434b26'],['#715842','#45352a'],['#a2824d','#6c5330'],['#744f5c','#46303a'],['#757773','#4a4c49'],['#573030','#2c1919'],['#6e5a76','#3c3045'],['#4f7a6b','#2b4a3f']];
+const G=u=>'https://www.google.com/search?q='+encodeURIComponent(u);
+// id,name,cat,url,tag,note
+const BASE=[
+['1stdibs','1stDibs',0,'https://www.1stdibs.com/new-arrivals/furniture/','direct','The big one. Dealers from everywhere, sorted newest first.'],
+['chairish','Chairish',0,'https://www.chairish.com/collection/new-arrivals','direct','Vintage and designer pieces, fresh every day.'],
+['oblist','The Oblist',0,'https://oblist.com/','home','Curated objects and furniture from independent dealers.'],
+['pamono','Pamono',0,'https://www.pamono.com/','home','European vintage, vetted and shipped.'],
+['incollect','Incollect',0,'https://www.incollect.com/','home','Gallery-grade design, art and antiques.'],
+['southlooploft','South Loop Loft',1,'https://www.chairish.com/shop/southlooploft','direct','Chicago dealer with a sharp eye for mid-century.'],
+['schalling','Studio Schalling',1,'https://www.1stdibs.com/dealers/studio-schalling/','direct','Scandinavian and European design, quietly collected.'],
+['chezpluie','Chez Pluie',1,'https://www.chezpluie.com/collections/latest-products','direct','Vintage lighting and furniture, soft and French.'],
+['feahome','FEA Home',1,'https://feahome.com/collections/new-arrivals','direct','Sculptural vintage with a gallery feel.'],
+['galeriehalf','Galerie Half',1,'https://galeriehalf.com/','home','Collectible design and rare finds.'],
+['nickeykehoe','Nickey Kehoe',1,'https://nickeykehoe.com/','home','Antiques plus their own line. A designer favorite.'],
+['claudehome','Claude Home',1,'https://claudehome.com/','home','Rugs, kilims and handmade objects.'],
+['vop','Vintage on Point',1,G('Vintage on Point vintage furniture new arrivals'),'search','Link goes to a search. Use edit link to paste the exact page.'],
+['blanc','Blanc Marine Boutique',1,G('Blanc Marine Boutique vintage new arrivals'),'search','Link goes to a search. Use edit link to paste the exact page.'],
+['goodbehavior','Good Behavior Vintage',1,G('Good Behavior Vintage new arrivals'),'search','Link goes to a search. Use edit link to paste the exact page.'],
+['loomhouse','The Loom House',2,'https://www.theloomhouse.com/','home','Hand-knotted and vintage rugs.'],
+['revival','Revival Rugs',2,'https://revivalrugs.com/','home','Vintage and antique rugs, many sizes.'],
+['passerine','Passerine Home',2,'https://passerinehome.com/','home','Hand-selected vintage rugs and textiles.'],
+['armadillo','Armadillo',2,'https://armadillo-co.com/us/shop-all','direct','Rugs in earthy, layered palettes.'],
+['lawson','Lawson-Fenning',3,'https://lawsonfenning.com/','home','Californian furniture with a collected feel.'],
+['fourhands','Four Hands',3,'https://fourhands.com/','home','Well-priced new furniture with character.'],
+['soho','Soho Home',3,'https://www.sohohome.com/','home','Furniture and lighting, club-house mood.'],
+['tappan','Tappan',3,'https://tappancollective.com/','home','Handmade furniture and objects.'],
+['matilda','Matilda Goad',4,'https://www.matildagoad.com/','home','Playful hardware, tableware and lighting.'],
+['rejuv','Rejuvenation',4,'https://www.rejuvenation.com/','home','Lighting and hardware with period detail.'],
+['schumacher','Schumacher',5,'https://schumacher.com/','home','Heritage fabric and wallpaper.'],
+['calico','Calico',5,'https://calicowallpaper.com/','home','Hand-painted style wallpaper.'],
+['cle','Clé Tile',6,'https://cletile.com/','home','Zellige and handmade tile.'],
+['bertmay','Bert & May',6,'https://www.bertandmay.com/','home','Handmade, colorful tile.'],
+['abask',"ABASK",3,'https://abask.com/','home',"$$$$"],
+['burkedecor',"Burke Decor",3,'https://burkedecor.com/','home',"$$–$$$. The site has changed over time. Check it before ordering."],
+['cb2',"CB2",3,'https://cb2.com/','home',"$$–$$$"],
+['denvermodern',"Denver Modern",3,'https://denvermodern.com/','home',"$$$"],
+['eternitymodern',"Eternity Modern",3,'https://eternitymodern.com/','home',"$$–$$$. Especially beds and modern classics."],
+['faithfulroots',"Faithful Roots",3,'https://faithfulroots.com/','home',"$$$–$$$$. Made-to-order furniture."],
+['fermliving',"Ferm Living",3,'https://fermliving.us/','home',"$$–$$$"],
+['forom',"Forom",3,'https://foromshop.com/','home',"$$$"],
+['hirschtimber',"Hirsch + Timber",3,'https://hirschandtimber.com/','home',"$$$–$$$$"],
+['jennikaynehome',"Jenni Kayne Home",3,'https://jennikayne.com/','home',"$$$"],
+['luluandgeorgia',"Lulu and Georgia",3,'https://luluandgeorgia.com/','home',"$$–$$$"],
+['maidenhome',"Maiden Home",3,'https://maidenhome.com/','home',"$$$–$$$$"],
+['mcgeeandco',"McGee & Co.",3,'https://mcgeeandco.com/','home',"$$–$$$"],
+['metteditmer',"Mette Ditmer",3,'https://metteditmer.com/','home',"$$–$$$"],
+['portanyc',"Porta NYC",3,'https://porta-nyc.com/','home',"$$–$$$"],
+['rh',"RH",3,'https://rh.com/','home',"$$$–$$$$"],
+['rosetarlow',"Rose Tarlow",3,'https://rosetarlow.com/','home',"$$$$ · Trade"],
+['sharlandengland',"Sharland England",3,'https://sharland-england.com/','home',"$$$"],
+['theexpert',"The Expert",3,'https://theexpert.com/','home',"$$$–$$$$. Designer consultations and sourcing."],
+['bandbitalia',"B&B Italia",3,'https://bebitalia.com/','home',"$$$$. Sofas and sectionals."],
+['interiordefine',"Interior Define",3,'https://interiordefine.com/','home',"$$–$$$. Sofas and sectionals."],
+['roveconcepts',"Rove Concepts",3,'https://roveconcepts.com/','home',"$$–$$$. Sofas and sectionals."],
+['westelm',"West Elm",3,'https://westelm.com/','home',"$$–$$$"],
+['designwithinreach',"Design Within Reach",3,'https://dwr.com/','home',"$$$"],
+['homeunion',"Home Union",1,'https://homeunionnyc.com/','home',"$$$ · Vintage. Vintage furniture."],
+['megturner',"Meg Turner",1,'https://megturnergallery.com/','home',"$$$$ · Vintage. Vintage furniture."],
+['rosemaryhome',"Rosemary Home",1,G("Rosemary Home new arrivals"),'search',"· Vintage. Vintage objects. Site needs confirming, so this links to a search. Use edit link to paste the right page."],
+['elsiegreen',"Elsie Green",1,G("Elsie Green new arrivals"),'search',"· Vintage. Vintage objects. This links to a search. Use edit link to paste the right page."],
+['goldkantleuchten',"Goldkant Leuchten",1,G("Goldkant Leuchten vintage lighting"),'search',"$$$–$$$$ · Vintage. Vintage lighting with no current maker site. Source through 1stDibs and vintage dealers."],
+['armacmartin',"Armac Martin",4,'https://armacmartin.com/','home',"$$$. Architectural hardware."],
+['barbera',"Barbera",4,'https://barberadesign.com/','home',"$$$–$$$$. Architectural hardware."],
+['corston',"Corston",4,'https://us.corston.com/','home',"$$$. Architectural hardware."],
+['devol',"deVOL",4,'https://devolkitchens.com/','home',"$$$. Architectural hardware."],
+['ellisworks',"Ellis Works",4,'https://ellis-works.com/','home',"$$$–$$$$. Architectural hardware."],
+['emtek',"Emtek",4,'https://emtek.com/','home',"$$–$$$. Architectural hardware."],
+['henryblakehardware',"Henry Blake Hardware",4,'https://henryblakehardware.co.uk/','home',"$$$–$$$$. Architectural hardware."],
+['jimlawrence',"Jim Lawrence",4,'https://jim-lawrence.co.uk/','home',"$$–$$$. Hardware and lighting."],
+['loandco',"Lo & Co.",4,'https://loandcointeriors.com/','home',"$$$. Architectural hardware."],
+['modernmatter',"Modern Matter",4,'https://modern-matter.com/','home',"$$$–$$$$. Architectural hardware."],
+['petrahardware',"Petra Hardware",4,'https://petrahardware.com/','home',"$$$–$$$$. Includes the Helder Barbosa Lélé knob."],
+['rockymountainhardware',"Rocky Mountain Hardware",4,'https://rockymountainhardware.com/','home',"$$$$. Circa knobs and pulls."],
+['spaceswithin',"Spaces Within",4,'https://spaceswithin.se/','home',"$$$$. Architectural hardware."],
+['studiohenrywilson',"Studio Henry Wilson",4,'https://studiohenrywilson.com/','home',"$$$–$$$$. Architectural hardware."],
+['signethardware',"Signet Hardware",4,'https://signethardware.com/','home',"$$–$$$. Formerly The Details."],
+['waterworks',"Waterworks",4,'https://waterworks.com/','home',"$$$$. Architectural hardware."],
+['cassonhardware',"Casson Hardware",4,'https://cassonhardware.com/','home',"$$–$$$$. Switches and switch plates."],
+['forbesandlomax',"Forbes & Lomax",4,'https://forbesandlomax.com/','home',"$$$–$$$$. Switches and switch plates."],
+['gantri',"GANTRI",4,'https://gantri.com/','home',"$$. Lighting."],
+['henrii',"Henrii",4,'https://henrii.com/','home',"$$$–$$$$. Lighting."],
+['lostine',"Lostine",4,'https://lostine.com/','home',"$$$–$$$$. Lighting."],
+['mullanlighting',"Mullan Lighting",4,'https://mullanlighting.com/','home',"$$–$$$. Lighting."],
+['studioannadawson',"Studio Anna Dawson",4,'https://studioannadawson.com/','home',"$$$$. Lighting."],
+['werajane',"Wera Jane",4,'https://werajane.com/','home',"$$$. Lighting."],
+['kampstudios',"Kamp Studios",5,'https://kampstudios.com/','home',"$$$$ · Bespoke. Plaster and specialty finishes."],
+['meodedpaintandplaster',"Meoded Paint & Plaster",5,'https://meodedpaint.com/','home',"$$. Plaster and limewash."],
+['portolapaints',"Portola Paints",5,'https://portolapaints.com/','home',"$$. Plaster, limewash and paint."],
+['texston',"Texston",5,'https://texston.com/','home',"$$–$$$ · Trade. Plaster and specialty finishes."],
+['caitlinwilson',"Caitlin Wilson",5,'https://caitlinwilson.com/','home',"$$–$$$. Wallpaper and paint."],
+['degournay',"de Gournay",5,'https://degournay.com/','home',"$$$$ · Bespoke. Hand-painted wallpaper."],
+['ikseldecorativearts',"Iksel Decorative Arts",5,'https://iksel.com/','home',"$$$$. Wallpaper."],
+['mjatelier',"MJ Atelier",5,'https://mjatelier.com/','home',"$$$$ · Bespoke. Wallpaper."],
+['zuber',"Zuber",5,'https://zuber.fr/','home',"$$$$. Wallpaper."],
+['colefaxandfowler',"Colefax and Fowler",5,'https://colefax.com/','home',"$$$–$$$$ · Trade. Fabric and trim."],
+['litis',"Élitis",5,'https://elitis.fr/','home',"$$$ · Trade. Fabric and trim."],
+['foliofabrics',"Folio Fabrics",5,'https://foliofabrics.com/','home',"$$–$$$. Fabric."],
+['hollandandsherryinteriors',"Holland & Sherry Interiors",5,'https://interiors.hollandandsherry.com/','home',"$$$$ · Trade. Fabric."],
+['kravet',"Kravet",5,'https://kravet.com/','home',"$$–$$$$ · Trade. Also Lee Jofa and Kelly Wearstler."],
+['nobilis',"Nobilis",5,'https://nobilis.fr/','home',"$$$ · Trade. Fabric and wallcovering."],
+['phillipjeffries',"Phillip Jeffries",5,'https://phillipjeffries.com/','home',"$$$–$$$$ · Trade. Wallcoverings."],
+['pollack',"Pollack",5,'https://pollackassociates.com/','home',"$$$ · Trade. Includes the Columnist collection."],
+['romo',"Romo",5,'https://romo.com/','home',"$$$ · Trade. Includes Zamari."],
+['rubelli',"Rubelli",5,'https://rubelli.com/','home',"$$$$ · Trade. Fabric."],
+['samuelandsons',"Samuel & Sons",5,'https://samuelandsons.com/','home',"$$$ · Trade. Trim and passementerie."],
+['zakfox',"Zak + Fox",5,'https://zakandfox.com/','home',"$$$$ · Trade. Fabric."],
+['concretecollaborative',"Concrete Collaborative",6,'https://concrete-collaborative.com/','home',"$$$. Tile, stone and pavers."],
+['ecooutdoor',"Eco Outdoor",6,'https://eco-outdoor.com/','home',"$$$–$$$$. Stone and pavers."],
+['giovannibarbieri',"Giovanni Barbieri",6,'https://giovannibarbieri.com/','home',"$$$$. Tile."],
+['riadtile',"Riad Tile",6,'https://riadtile.com/','home',"$$–$$$. Zellige, including Warm Grey New Thin Zellige Bejmat."],
+['ziatile',"Zia Tile",6,'https://ziatile.com/','home',"$$$. Tile."],
+['quornstone',"Quorn Stone",6,'https://quornstone.com/','home',"$$$. Stone."],
+['sareenstone',"Sareen Stone",6,'https://sareenstone.com.au/','home',"$$$. Stone."],
+['trouvailleimports',"Trouvaille Imports",6,'https://trouvailleimports.com/','home',"$$$. Stone."],
+['tumbled',"Tumbled",6,'https://tumbled.com.au/','home',"$$$. Stone."],
+['ernesta',"Ernesta",2,'https://ernestarugs.com/','home',"$$$. Custom sizing."],
+['nanimarquina',"Nanimarquina",2,'https://nanimarquina.com/','home',"$$$–$$$$. Designer rugs."],
+['nordicknots',"Nordic Knots",2,'https://nordicknots.com/','home',"$$$. Rugs."],
+['pehr',"Pehr",2,'https://pehr.com/','home',"$$. More broadly home textiles than a rug house."],
+['pierrefrey',"Pierre Frey",2,'https://pierrefrey.com/','home',"$$$$ · Trade. Rugs and fabric."],
+['therugcompany',"The Rug Company",2,'https://therugcompany.com/','home',"$$$$. Rugs."],
+['woven',"Woven",2,'https://woven.is/','home',"$$$$. Especially the Mohair collection."],
+['pstrstudio',"PSTR Studio",7,'https://pstrstudio.com/','home',"$$. Art."],
+['rogallery',"RoGallery",7,'https://rogallery.com/','home',"$$–$$$$. Art."],
+['afloral',"Afloral",8,'https://afloral.com/','home',"$–$$. Vases and decorative objects."],
+['estellecoloredglass',"Estelle Colored Glass",8,'https://estellecoloredglass.com/','home',"$$–$$$. Glass."],
+['goodies',"Goodies",8,'https://goodies.la/','home',"$. Vases and objects."],
+['huegahhome',"HueGah Home",8,'https://huegahhome.com/','home',"$$–$$$. Vases and objects."],
+['maisonluna',"Maison Luna",8,'https://maisonluna.co/','home',"$$–$$$. Vases and objects."],
+['maxidny',"MAX ID NY",8,'https://maxidnystore.com/','home',"$$$. Vases and objects."],
+['mociun',"Mociun",8,'https://mociun.com/','home',"$$–$$$. Home objects."],
+['nudeglass',"NUDE Glass",8,'https://nudeglass.com/','home',"$$–$$$. Glass."],
+['paularnholdglass',"Paul Arnhold Glass",8,'https://paularnholdglass.com/','home',"$$$. Glass."],
+['rentrayage',"Rentrayage",8,'https://rentrayage.com/','home',"$$–$$$. Vases and objects."],
+['apartment387',"Apartment 387",8,G("Apartment 387 new arrivals"),'search',"Vases and objects. This links to a search. Use edit link to paste the right page."],
+['alexandtrahanas',"Alex and Trahanas",8,'https://alexandtrahanas.com/','home',"$$–$$$. Ceramics and tabletop."],
+['earthenshop',"Earthen Shop",8,'https://earthen-shop.com/','home',"$–$$. Ceramics and tabletop."],
+['maisonflaneur',"Maison Flaneur",8,'https://maisonflaneur.com/','home',"$$–$$$. Includes the Ciao Cuore plate."],
+['musubikiln',"Musubi Kiln",8,'https://musubikiln.com/','home',"$$–$$$. Ceramics and tabletop."],
+['rebeccaudall',"Rebecca Udall",8,'https://rebeccaudall.com/','home',"$$–$$$. Ceramics and tabletop."],
+['mataortizpottery',"Mata Ortiz Pottery",8,G("Mata Ortiz Pottery new arrivals"),'search',"$$–$$$$. A Mexican pottery tradition, not one company. Source by individual artist or gallery. This links to a search."],
+['atelierartizan',"Atelier Artizan",9,'https://atelierartizan.com/','home',"$$$$. Outdoor furniture."],
+['brownjordan',"Brown Jordan",9,'https://brownjordan.com/','home',"$$$$. Outdoor furniture."],
+['bycrea',"By Crea",9,'https://by-crea.com/','home',"$$$. Outdoor furniture."],
+['businessandpleasure',"Business and Pleasure",9,G("Business and Pleasure new arrivals"),'search',"Outdoor furniture. This links to a search. Use edit link to paste the right page."],
+['tuuci',"Tuuci",9,G("Tuuci new arrivals"),'search',"Outdoor furniture. This links to a search. Use edit link to paste the right page."],
+['sunbrella',"Sunbrella",9,'https://sunbrella.com/','home',"$$–$$$. Outdoor fabric."],
+['therealreal',"The RealReal",10,'https://www.therealreal.com/','home',"$$$. Authenticated luxury resale. New arrivals daily."],
+['vestiaire',"Vestiaire Collective",10,'https://us.vestiairecollective.com/','home',"$$–$$$. Authenticated designer resale from sellers around the world."],
+['depop',"Depop",10,'https://www.depop.com/','home',"$–$$. Vintage and secondhand from individual sellers."],
+['grailed',"Grailed",10,'https://www.grailed.com/','home',"$–$$$. Designer and vintage, strong for menswear and archive."],
+['poshmark',"Poshmark",10,'https://poshmark.com/','home',"$–$$. Secondhand from closets across the US."],
+['ebayfashion',"eBay",10,'https://www.ebay.com/','home',"$–$$$. Vintage and designer. Use saved searches for specific pieces."],
+['etsyvintage',"Etsy Vintage",10,'https://www.etsy.com/market/vintage_clothing','home',"$–$$. Vintage clothing and accessories from independent sellers."],
+['dibsfashion',"1stDibs Fashion",10,'https://www.1stdibs.com/fashion/','home',"$$$–$$$$. Vintage couture, jewelry and bags from dealers."],
+['rebag',"Rebag",10,'https://www.rebag.com/','home',"$$$. Authenticated luxury handbags."],
+['fashionphile',"Fashionphile",10,'https://www.fashionphile.com/','home',"$$$. Authenticated luxury bags and accessories."],
+['thredup',"ThredUp",10,'https://www.thredup.com/','home',"$. Large secondhand marketplace with easy filters."],
+['rubylane',"Ruby Lane",10,'https://www.rubylane.com/','home',"$$–$$$. Vintage clothing and jewelry from dealers."],
+['wgaca',"What Goes Around Comes Around",10,'https://wgaca.com/','home',"$$$–$$$$. Curated vintage designer."],
+['hardlyeverwornit',"Hardly Ever Worn It",10,'https://www.hardlyeverwornit.com/','home',"$$$. Pre-loved designer from the UK."],
+['beyondretro',"Beyond Retro",10,'https://www.beyondretro.com/','home',"$–$$. Vintage clothing from the UK and Europe."],
+['vinted',"Vinted",10,'https://www.vinted.com/','home',"$. Secondhand from sellers, strongest in Europe."],
+['mercari',"Mercari",10,'https://www.mercari.com/','home',"$–$$. Secondhand from individual sellers."],
+['collectorsquare',"Collector Square",10,'https://www.collectorsquare.com/','home',"$$$. Authenticated luxury, mostly from Europe."],
+['yoogis',"Yoogi’s Closet",10,'https://www.yoogiscloset.com/','home',"$$$. Authenticated luxury resale."],
+['ssense',"SSENSE",11,'https://www.ssense.com/','home',"$$–$$$$. Designer and emerging labels."],
+['netaporter',"Net-a-Porter",11,'https://www.net-a-porter.com/','home',"$$$–$$$$. Designer new arrivals."],
+['mytheresa',"Mytheresa",11,'https://www.mytheresa.com/','home',"$$$–$$$$. Designer new arrivals."],
+['farfetch',"Farfetch",11,'https://www.farfetch.com/','home',"$$–$$$$. Boutiques and designers from around the world."],
+['modaoperandi',"Moda Operandi",11,'https://www.modaoperandi.com/','home',"$$$–$$$$. Runway and designer."],
+['shopbop',"Shopbop",11,'https://www.shopbop.com/','home',"$$–$$$. Contemporary and designer."],
+['nordstrom',"Nordstrom",11,'https://www.nordstrom.com/','home',"$$–$$$. Wide range, from everyday to designer."],
+['saks',"Saks Fifth Avenue",11,'https://www.saksfifthavenue.com/','home',"$$$–$$$$. Designer new arrivals."],
+['neiman',"Neiman Marcus",11,'https://www.neimanmarcus.com/','home',"$$$–$$$$. Designer new arrivals."],
+['bergdorf',"Bergdorf Goodman",11,'https://www.bergdorfgoodman.com/','home',"$$$–$$$$. Designer new arrivals."],
+['browns',"Browns",11,'https://www.brownsfashion.com/','home',"$$$–$$$$. London designer boutique."],
+['luisaviaroma',"LuisaViaRoma",11,'https://www.luisaviaroma.com/','home',"$$$–$$$$. Italian designer retailer."],
+['mrporter',"Mr Porter",11,'https://www.mrporter.com/','home',"$$$–$$$$. Menswear designer new arrivals."],
+['reformation',"Reformation",12,'https://www.thereformation.com/','home',"$$. Dresses and everyday pieces."],
+['doen',"Dôen",12,'https://shopdoen.com/','home',"$$–$$$. Soft, romantic dresses and blouses."],
+['cos',"COS",12,'https://www.cos.com/','home',"$$. Clean, minimal basics."],
+['aritzia',"Aritzia",12,'https://www.aritzia.com/','home',"$$. Contemporary everyday wardrobe."],
+['everlane',"Everlane",12,'https://www.everlane.com/','home',"$$. Basics and denim."],
+['sezane',"Sézane",12,'https://www.sezane.com/','home',"$$. French wardrobe staples."],
+['ganni',"Ganni",12,'https://www.ganni.com/','home',"$$–$$$. Danish contemporary."],
+['toteme',"Totême",12,'https://toteme-studio.com/','home',"$$$. Minimal, well-cut basics."],
+['khaite',"Khaite",12,'https://khaite.com/','home',"$$$$. Luxury ready-to-wear."],
+['therow',"The Row",12,'https://www.therow.com/','home',"$$$$. Quiet luxury."],
+['lemaire',"Lemaire",12,'https://www.lemaire.fr/','home',"$$$–$$$$. Understated French design."],
+['nililotan',"Nili Lotan",12,'https://www.nililotan.com/','home',"$$$. Refined tailoring and shirting."],
+['frame',"Frame",12,'https://frame-store.com/','home',"$$. Denim and tailored basics."],
+['vince',"Vince",12,'https://www.vince.com/','home',"$$–$$$. Knitwear and easy tailoring."],
+['rouje',"Rouje",12,'https://www.rouje.com/','home',"$$. Parisian wardrobe."],
+['otherstories',"& Other Stories",12,'https://www.stories.com/','home',"$–$$. Accessible contemporary."],
+['cuyana',"Cuyana",12,'https://www.cuyana.com/','home',"$$–$$$. Considered leather goods and basics."],
+['mansurgavriel',"Mansur Gavriel",12,'https://www.mansurgavriel.com/','home',"$$–$$$. Bags and shoes."],
+['loefflerrandall',"Loeffler Randall",12,'https://www.loefflerrandall.com/','home',"$$–$$$. Shoes and bags."],
+['madewell',"Madewell",12,'https://www.madewell.com/','home',"$–$$. Denim and everyday basics."],
+['jcrew',"J.Crew",12,'https://www.jcrew.com/','home',"$–$$. Classics and tailoring."],
+['quince',"Quince",12,'https://www.quince.com/','home',"$–$$. Accessible cashmere, silk and linen."],
+['mejuri',"Mejuri",13,'https://mejuri.com/','home',"$$. Everyday fine jewelry."],
+['catbird',"Catbird",13,'https://www.catbirdnyc.com/','home',"$$–$$$. Delicate fine jewelry."],
+['missoma',"Missoma",13,'https://www.missoma.com/','home',"$$. Gold-plated and fine jewelry."],
+['monicavinader',"Monica Vinader",13,'https://www.monicavinader.com/','home',"$$–$$$. Contemporary jewelry."],
+['jenniferfisher',"Jennifer Fisher",13,'https://jenniferfisherjewelry.com/','home',"$$–$$$. Statement hoops and chains."],
+['sophiebuhai',"Sophie Buhai",13,'https://sophiebuhai.com/','home',"$$$. Sculptural silver and gold."],
+['lorenstewart',"Loren Stewart",13,'https://lorenstewart.com/','home',"$$$. Fine jewelry with a modern edge."],
+['aurate',"Aurate",13,'https://auratenewyork.com/','home',"$$–$$$. Gold jewelry."],
+['studs',"Studs",13,'https://shopstuds.com/','home',"$$. Ear piercing and earrings."],
+['analuisa',"Ana Luisa",13,'https://www.analuisa.com/','home',"$–$$. Affordable everyday jewelry."],
+['gorjana',"Gorjana",13,'https://www.gorjana.com/','home',"$$. Layering jewelry."],
+['pamelalove',"Pamela Love",13,'https://pamelalove.com/','home',"$$$. Sculptural jewelry."],
+['warbyparker',"Warby Parker",13,'https://www.warbyparker.com/','home',"$–$$. Eyewear."],
+['polene',"Polène",13,'https://www.polene-paris.com/','home',"$$$. Leather bags from Paris."]
+];
+let LIB={
+'Designers & studios':['Clements Design','Janette Mallory','DJDS','Brophy Interiors','Corvino','The LP Creative','Jute','Studio MTN','Nickey Kehoe','Pierce and Ward','Julie Hillman','Kim Lapin','Studio Mellone','Studio Ashby','Heidi Caillier','Rebecca Hughes'],
+'Rugs':['Pehr','Armadillo','Ernesta','Nordic Knots','Pierre Frey','The Rug Company','The Loom House','Sunbrella'],
+'Wallpaper & paint':['Calico','Portola','Caitlin Wilson','MJ Atelier','De Gournay','Zuber','Iksel','Papier'],
+'Stone & tile':['Concrete Collaborative','Quorn','Trouvaille','Sareen','Alexander James','Bespoke Studio','Bert & May','Zia Tile','Orca Living','Clé'],
+'Hardware':['Matilda Goad','Spaces Within','Waterworks','Barbera','Lo & Co','Modern Matter','Studio Henry Wilson','Devol','Jim Lawrence','Emtek','Henry Blake','Armac Martin','Corston','Ellis Works','Casson','Forbes & Lomax'],
+'Textiles':['Zak+Fox','Schumacher','Kravet','Lee Jofa','Romo','Pollack','Samuel & Sons','Élitis','Holland & Sherry','Nobilis','Rubelli','Phillip Jeffries','Colefax and Fowler','Folio']
+};
+let ARCH={
+warm:{n:'Storied Warmth',t:'Rooms that feel collected over time: worn wood, brass, wool and a few pieces with a past.',look:'warm earthy',tips:['Vintage wood furniture with visible patina','Hand-knotted or flatweave wool rugs in clay, rust and olive','Aged brass lighting and hardware','Linen, mohair and nubby upholstery','One antique that carries the room']},
+moody:{n:'Moody Collector',t:'Deep, enveloping rooms with rich color, dark woods and low, glowing light.',look:'moody dark',tips:['Velvet, mohair and leather in deep tones','Dark-stained or ebonized wood and lacquer','Low warm lighting: sconces, table lamps, shaded pendants','Rugs and wallpaper in inky blues, oxblood and forest','Aged mirrors and gilded frames']},
+airy:{n:'Sunlit Calm',t:'Light, quiet rooms with texture instead of pattern and plenty of breathing space.',look:'light neutral',tips:['Bouclé, linen and washed cotton upholstery','Pale oak, rattan and cane','Plaster, limewash and soft stone finishes','Low-contrast rugs in ivory, oat and mist','A few well-shaped ceramic and glass objects']},
+bold:{n:'Colorful Maximalist',t:'Joyful, layered rooms with color, pattern and objects that start conversations.',look:'bold colorful',tips:['Pattern on pattern: stripes, florals, ikat, block print','Lacquer, painted furniture and glass in saturated color','Vintage Italian and postmodern pieces','Graphic rugs and wallpaper','Art hung salon-style']},
+sculpt:{n:'Sculptural Modern',t:'Gallery-like rooms where each piece is shaped like an object of art.',look:'sculptural',tips:['Pieces with strong silhouettes: curved sofas, carved stone, cast bronze','Marble, travertine and polished metal','Vintage 1970s–80s Italian and French design','Few pieces, generous space around each','Art-led rugs and lighting']},
+trad:{n:'Classic Heirloom',t:'Layered, traditional rooms with carved wood, fine fabrics and pieces meant to last generations.',look:'antique classic',tips:['Antique case pieces and carved or turned wood','Oriental and antique rugs','Silk, damask and fine woven fabrics','Brass, crystal and porcelain details','Paneling, paint and wallpaper with a hand-finished look']}};
+const SM={'1stdibs':[3],chairish:[2],oblist:[2],pamono:[2,1],incollect:[3],southlooploft:[2],schalling:[3,1],chezpluie:[2],feahome:[3],galeriehalf:[3,1],nickeykehoe:[3],claudehome:[3],vop:[2],blanc:[2],goodbehavior:[2],loomhouse:[2],revival:[1],passerine:[2],armadillo:[3],lawson:[3],fourhands:[1],soho:[3,1],tappan:[3],matilda:[2,1],rejuv:[1],schumacher:[3],calico:[2],cle:[2],bertmay:[2,1],'abask':[3],'burkedecor':[2],'cb2':[2],'denvermodern':[3],'eternitymodern':[2],'faithfulroots':[3],'fermliving':[2],'forom':[3],'hirschtimber':[3],'jennikaynehome':[3],'luluandgeorgia':[2],'maidenhome':[3],'mcgeeandco':[2],'metteditmer':[2,1],'portanyc':[2],'rh':[3],'rosetarlow':[3],'sharlandengland':[3,1],'theexpert':[3],'bandbitalia':[3,1],'interiordefine':[2],'roveconcepts':[2],'westelm':[2],'designwithinreach':[3],'homeunion':[3],'megturner':[3],'rosemaryhome':[2],'elsiegreen':[2],'goldkantleuchten':[3,1],'armacmartin':[3,1],'barbera':[3],'corston':[3],'devol':[3,1],'ellisworks':[3],'emtek':[2],'henryblakehardware':[3,1],'jimlawrence':[2,1],'loandco':[3],'modernmatter':[3],'petrahardware':[3],'rockymountainhardware':[3],'spaceswithin':[3,1],'studiohenrywilson':[3,1],'signethardware':[2],'waterworks':[3],'cassonhardware':[2],'forbesandlomax':[3,1],'gantri':[2],'henrii':[3],'lostine':[3],'mullanlighting':[2,1],'studioannadawson':[3,1],'werajane':[3],'kampstudios':[3],'meodedpaintandplaster':[2],'portolapaints':[2],'texston':[2],'caitlinwilson':[2],'degournay':[3,1],'ikseldecorativearts':[3,1],'mjatelier':[3],'zuber':[3,1],'colefaxandfowler':[3,1],'litis':[3,1],'foliofabrics':[2],'hollandandsherryinteriors':[3,1],'kravet':[2],'nobilis':[3,1],'phillipjeffries':[3],'pollack':[3],'romo':[3,1],'rubelli':[3,1],'samuelandsons':[3],'zakfox':[3,1],'concretecollaborative':[3],'ecooutdoor':[3],'giovannibarbieri':[3,1],'riadtile':[2],'ziatile':[3],'quornstone':[3,1],'sareenstone':[3,1],'trouvailleimports':[3],'tumbled':[3,1],'ernesta':[3],'nanimarquina':[3,1],'nordicknots':[3,1],'pehr':[2],'pierrefrey':[3,1],'therugcompany':[3,1],'woven':[3,1],'pstrstudio':[2],'rogallery':[2],'afloral':[1],'estellecoloredglass':[2],'goodies':[1],'huegahhome':[2],'maisonluna':[2],'maxidny':[3],'mociun':[2],'nudeglass':[2,1],'paularnholdglass':[3],'rentrayage':[2],'apartment387':[2],'alexandtrahanas':[2],'earthenshop':[1],'maisonflaneur':[2],'musubikiln':[2],'rebeccaudall':[2],'mataortizpottery':[2],'atelierartizan':[3,1],'brownjordan':[3],'bycrea':[3,1],'businessandpleasure':[2],'tuuci':[2],'sunbrella':[2]};
+const O=(l,s,w,x)=>Object.assign({l,s,w},x||{});
+let QZ=[
+{n:'Your project',q:[
+ {k:'scope',q:'What are you working on?',o:[O('A whole home'),O('A few rooms'),O('One room'),O('A single piece')]},
+ {k:'rooms',q:'Which rooms?',multi:1,hint:'Pick all that apply.',o:['Living room','Kitchen and dining','Primary bedroom','Bathroom','Office','Entry and hallways','Outdoor','Kids or nursery'].map(x=>O(x))},
+ {k:'budget',q:'What does a typical room budget look like?',o:[O('Approachable','Under $5,000 a room',0,{tier:2}),O('Considered','$5,000 to $20,000 a room',0,{tier:3}),O('Invested','$20,000 and up',0,{tier:3}),O('It depends','Splurge on some pieces, save on others',0,{tier:3})]},
+ {k:'life',q:'Who uses the space?',multi:1,hint:'This helps us suggest practical fabrics.',o:['Kids','Pets','Frequent guests','Work from home','Mostly just us'].map(x=>O(x))}]},
+{n:'Your style',q:[
+ {k:'mood',q:'Which room would you rather walk into?',o:[O('Sun-warmed','Worn wood, wool and brass',{warm:2}),O('Dim and enveloping','Deep color and low light',{moody:2}),O('Light and quiet','Pale texture and lots of air',{airy:2}),O('Joyful and layered','Color, pattern and objects',{bold:2}),O('Gallery-like','Sculptural pieces with space around them',{sculpt:2}),O('Classic and carved','Heirlooms, wood and fine fabric',{trad:2})]},
+ {k:'palette',q:'Which palette feels like you?',o:[O('Warm neutrals','',{warm:2,airy:1},{sw:['#e8dccb','#c9b79c','#8f7a5e','#4a3b2c']}),O('Earth and olive','',{warm:2,bold:1},{sw:['#6f7a3d','#b8693f','#d9c7a3','#3d3126']}),O('Moody and deep','',{moody:3},{sw:['#1f2b33','#4a2b2b','#2f3d2e','#a88a4f']}),O('Soft and airy','',{airy:3},{sw:['#f3efe8','#dfe3df','#c9d3d6','#e6d3c3']}),O('Color-forward','',{bold:3},{sw:['#c0482f','#e2a73a','#2f5d8a','#d77a98']}),O('Black, white and brass','',{sculpt:2,trad:1},{sw:['#171614','#f5f2ec','#b08d57','#8a8a86']})]},
+ {k:'era',q:'Which eras do you reach for?',multi:1,o:[O('Antique, before 1900','',{trad:1}),O('Mid-century modern','',{sculpt:1,warm:1}),O('1970s and 80s','',{warm:1,bold:1,sculpt:1}),O('Postmodern','',{bold:1,sculpt:1}),O('Contemporary','',{airy:1,sculpt:1}),O('Art Deco','',{trad:1,moody:1})]},
+ {k:'materials',q:'Which materials do you keep noticing?',multi:1,o:[O('Aged wood','',{warm:1,trad:1}),O('Brass and bronze','',{warm:1,moody:1}),O('Marble and stone','',{sculpt:1,airy:1}),O('Bouclé and linen','',{airy:1,sculpt:1}),O('Velvet and mohair','',{moody:1,bold:1}),O('Rattan and cane','',{airy:1,warm:1}),O('Lacquer and glass','',{bold:1,sculpt:1}),O('Leather','',{warm:1,moody:1})]},
+ {k:'shape',q:'What shapes do you gravitate to?',o:[O('Soft curves','',{airy:1,sculpt:1,warm:1}),O('Straight, clean lines','',{airy:1}),O('Sculptural and unexpected','',{sculpt:2,bold:1}),O('Traditional, carved and turned','',{trad:2})]},
+ {k:'pattern',q:'How do you feel about pattern?',o:[O('Mostly solids and texture','',{airy:1,warm:1,sculpt:1}),O('A little, here and there','',{warm:1,moody:1}),O('Pattern everywhere','',{bold:2,trad:1})]},
+ {k:'fullness',q:'How full should a room feel?',o:[O('Edited, room to breathe','',{airy:1,sculpt:1}),O('Collected, every piece has a story','',{warm:1,trad:1}),O('Layered and full','',{moody:1,bold:1})]}]},
+{n:'How you shop',q:[
+ {k:'hunt',q:'What are you hunting for?',o:[O('Antiques and vintage','',0,{cats:[0,1]}),O('New pieces with character','',0,{cats:[3,4]}),O('A mix of both','',0,{cats:[0,1,3]})]},
+ {k:'condition',q:'How do you feel about wear?',o:[O('Pristine only'),O('A gentle patina is lovely'),O('Restoration is fine for the right piece')]},
+ {k:'region',q:'Where can pieces come from?',o:[O('United States only','',0,{us:1}),O('Anywhere, I’ll wait for shipping')]},
+ {k:'need',q:'What are you sourcing right now?',multi:1,hint:'Pick all that apply.',o:[O('A rug','',0,{cats:[2],ph:'8x10 rug'}),O('Lighting','',0,{cats:[4],ph:'brass lamp'}),O('Furniture','',0,{cats:[0,1,3],ph:'sofa'}),O('Fabric or wallpaper','',0,{cats:[5],ph:'fabric'}),O('Tile or stone','',0,{cats:[6],ph:'tile'}),O('Hardware','',0,{cats:[4],ph:'cabinet hardware'}),O('Art','',0,{cats:[7],ph:'original art'}),O('Decor and objects','',0,{cats:[8],ph:'ceramic vase'}),O('Outdoor','',0,{cats:[9],ph:'outdoor lounge chair'})]}]}];
+let QS=QZ.flatMap(sec=>sec.q.map(q=>Object.assign({sec:sec.n},q))),QM=Object.fromEntries(QS.map(q=>[q.k,q]));
+const pick=(a,k)=>((a||{})[k]||[]).map(j=>QM[k].o[j]).filter(Boolean);
+const FOLDERS=['Rugs','Lighting','Furniture','Fabric & wallpaper','Hardware','Tile & stone','Art','Other'];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const today=()=>new Date().toISOString().slice(0,10);
+const num=s=>{const m=String(s||'').replace(/,/g,'').match(/\d+(\.\d+)?/);return m?parseFloat(m[0]):0};
+const money=n=>'$'+Math.round(n).toLocaleString();
+const url=u=>/^https?:\/\//i.test(u)?u:'https://'+u;
+const blank=()=>({space:'home',hidden:{},people:[],stash:{},pf:'',covers:{},follows:{},checked:{},urls:{},custom:[],watch:[],saved:[],projects:[],loved:{},quiz:{},profile:''});
+let S=blank(),tab='today',cat=-1,proj=null,dbDoc=null,saveT=null,shareMode=null,ready=false,Q={i:0,a:{}};
+const LS='atelier_v1';
+let Panel=null,PH=null,CMP=[],MY=null,MYDOC=null,FB=null;
+let TYPES=['Sofas & loveseats','Chairs & stools','Tables & desks','Storage & cabinets','Beds','Mirrors','Lighting','Rugs','Art & wall','Textiles & pillows','Wallpaper & paint','Tile & stone','Hardware','Decor & objects','Outdoor'];
+let TYPEKW=[['Rugs','rug|kilim|runner|carpet'],['Mirrors','mirror'],['Lighting','lamp|chandelier|sconce|pendant|lantern|lighting|light'],['Sofas & loveseats','sofa|loveseat|sectional|settee|banquette|daybed'],['Beds','bed|headboard'],['Chairs & stools','chair|stool|armchair|lounge|bench|ottoman|pouf'],['Tables & desks','table|desk|console'],['Storage & cabinets','cabinet|credenza|sideboard|dresser|chest|bookcase|shelf|shelving|armoire|nightstand|bar cart'],['Art & wall','art|painting|print|tapestry|sculpture|lithograph|photograph'],['Textiles & pillows','pillow|throw|blanket|fabric|curtain|drapery|linen|textile'],['Wallpaper & paint','wallpaper|paint'],['Tile & stone','tile|stone|marble|zellige'],['Hardware','knob|pull|handle|hinge|switchplate|hardware'],['Outdoor','outdoor|patio'],['Decor & objects','vase|bowl|object|candle|tray|planter|sculptural']];
+function guessType(t,f){for(const [n,w] of TYPEKW)if(new RegExp('\\b('+w+')s?\\b','i').test(t||''))return n;return ({Rugs:'Rugs',Lighting:'Lighting','Tile & stone':'Tile & stone',Hardware:'Hardware',Art:'Art & wall','Fabric & wallpaper':'Textiles & pillows'})[f]||(sp()==='wear'?'Other':'Decor & objects')}
+const ty=i=>i.type||guessType(i.title,i.folder);
+const SPC=c=>(c>=10)===(S.space==='wear');
+const sp=()=>S.space==='wear'?'wear':'home';
+const SV=()=>S.saved.filter(i=>(i.space||'home')===sp());
+const PJ=()=>S.projects.filter(p=>(p.space||'home')===sp());
+const WL=()=>S.watch.filter(w=>(w.space||'home')===sp());
+const WP=()=>sp()==='wear'?'e.g. black leather ballet flats size 8, vintage silk slip dress':'e.g. Gio Ponti style mirror, moody 8x10 rug';
+const ROLE=()=>sp()==='wear'?'personal stylist and fashion sourcing expert':'interior design consultant';
+const SLOTS=['Top','Bottom','Dress','Outerwear','Shoes','Bag','Jewelry','Accessory'];
+const PHP=()=>sp()==='wear'?'You are a vintage and designer fashion sourcing expert. Describe the item in the photo in 2 sentences (silhouette, era, fabric, color, brand cues if visible), then give 4 search phrases a shopper could type into a resale or designer retail site to find similar pieces. Reply with only JSON: {"desc":"...","queries":["...","...","...","..."]}':'You are a vintage furniture and decor sourcing expert. Describe the piece in the photo in 2 sentences (style, era, materials, color), then give 4 search phrases a shopper could type into a vintage marketplace to find similar pieces. Reply with only JSON: {"desc":"...","queries":["...","...","...","..."]}';
+const WTYPES=['Dresses','Tops','Bottoms','Outerwear','Knitwear','Shoes','Bags','Jewelry','Accessories','Other'];
+const WTYPEKW=[['Dresses','dress|gown|slip|jumpsuit|romper'],['Outerwear','coat|jacket|blazer|trench|parka|cape|vest'],['Knitwear','sweater|cardigan|knit|cashmere|pullover|jumper'],['Shoes','shoe|boot|sandal|loafer|heel|pump|flat|sneaker|mule|ballet'],['Bags','bag|tote|clutch|purse|satchel|handbag|wallet'],['Jewelry','ring|necklace|bracelet|earring|brooch|pendant|jewel|cuff|choker|chain'],['Bottoms','pant|trouser|jean|skirt|short|legging|denim'],['Tops','top|shirt|blouse|tee|tank|camisole|bodysuit|corset'],['Accessories','scarf|belt|hat|glove|sunglass|glasses|hair|tie']];
+const WARCH={
+quiet:{n:'Quiet Luxury',t:'Understated pieces in beautiful fabrics, with no logos and everything cut to last.',look:'quiet luxury neutral',tips:['Cashmere, silk and fine wool in camel, ivory and charcoal','Clean tailoring with a considered fit','Leather bags and shoes with minimal hardware','Look for Loro Piana, Brunello Cucinelli and The Row on resale sites','Skip logos and trends and buy the best version of the basic']},
+romantic:{n:'Vintage Romantic',t:'Soft, feminine pieces with a past: lace, silk, ruffles and delicate jewelry.',look:'vintage romantic',tips:['Silk slip dresses, lace blouses and bias-cut skirts','Edwardian and Victorian whites and embroidered cotton','Ballet flats, Mary Janes and small structured bags','Antique and estate jewelry','Check seams and fabric condition on vintage silk']},
+tailored:{n:'Sharp Tailored',t:'Polished, structured dressing: blazers, trousers and shirting that fit exactly.',look:'tailored structured',tips:['Blazers and trousers in wool and wool blends','Crisp poplin shirting and a good trench','Sleek leather shoes and structured bags','Look for 80s and 90s designer tailoring on resale','Budget for a tailor, since alterations make resale fit like custom']},
+easy:{n:'Easy Cool',t:'Relaxed, lived-in clothes that look effortless: denim, knits, leather and good boots.',look:'relaxed casual',tips:['Vintage denim, soft tees and oversized knits','Leather and suede jackets with some wear','Boots, loafers and clean sneakers','Slouchy bags in good leather','Worn-in is a plus here, so pre-loved is ideal']},
+bold:{n:'Bold Statement',t:'Color, print and shape with confidence: pieces that start conversations.',look:'bold statement',tips:['Saturated color and big graphic prints','Sculptural jewelry and statement shoes','Vintage 80s and 90s designer pieces','Strong silhouettes: puff sleeves, big shoulders, high shine','One loud piece per outfit and keep the rest simple']},
+minimal:{n:'Modern Minimal',t:'Clean lines, a tight palette and a few very good pieces.',look:'minimal clean',tips:['Monochrome pieces in black, white and grey','Simple knits, straight trousers and slip skirts','Architectural jewelry and plain leather bags','90s minimalist designers on resale','Buy fewer things in better cuts']}};
+const WLIB={
+'Designers & labels':['The Row','Khaite','Lemaire','Toteme','Jil Sander','Bottega Veneta','Celine','Maison Margiela','Prada','Miu Miu','Chloé','Isabel Marant','Acne Studios','Ganni','Dôen','Reformation','Nili Lotan','Loro Piana','Brunello Cucinelli','Max Mara','Alaïa','Proenza Schouler','Rachel Comey','Hereu','Staud','Jacquemus'],
+'Vintage dealers & boutiques':['What Goes Around Comes Around','Resurrection Vintage','Decades Inc.','Rokit','Beyond Retro','Hardly Ever Worn It'],
+'Jewelers':['Sophie Buhai','Jennifer Fisher','Catbird','Mejuri','Monica Vinader','Missoma','Loren Stewart','Foundrae','Jennifer Meyer','Pamela Love','Gorjana']};
+const WQZ=[
+{n:'Your wardrobe',q:[
+ {k:'scope',q:'What are you shopping for?',o:[O('My everyday wardrobe'),O('A seasonal refresh'),O('Special occasions'),O('A capsule wardrobe'),O('Clients or gifts')]},
+ {k:'need',q:'What are you looking for right now?',multi:1,hint:'Pick all that apply.',o:[O('Dresses','',0,{cats:[10,11,12],ph:'dress'}),O('Tailoring and coats','',0,{cats:[10,11,12],ph:'blazer'}),O('Knitwear','',0,{cats:[10,12],ph:'cashmere sweater'}),O('Denim and basics','',0,{cats:[10,12],ph:'vintage jeans'}),O('Shoes','',0,{cats:[10,11,12],ph:'leather loafers'}),O('Bags','',0,{cats:[10,11],ph:'leather shoulder bag'}),O('Jewelry','',0,{cats:[13,10],ph:'vintage gold necklace'})]},
+ {k:'hunt',q:'Where do you like to look?',multi:1,hint:'Pick all that apply.',o:[O('Resale and consignment','Authenticated and everyday',0,{cats:[10]}),O('Vintage shops and dealers','One of a kind pieces',0,{cats:[10]}),O('Designer new arrivals','The current season',0,{cats:[11]}),O('Contemporary brands','Everyday and mid-range',0,{cats:[12]}),O('Jewelers and accessories','',0,{cats:[13]})]},
+ {k:'budget',q:'What does a typical piece cost you?',o:[O('Thrifty','Under $100 a piece',0,{tier:1}),O('Approachable','$100 to $400 a piece',0,{tier:2}),O('Invested','$400 and up for the right piece',0,{tier:3}),O('It depends','Splurge on some, save on others',0,{tier:3})]},
+ {k:'region',q:'Where can pieces come from?',o:[O('United States only','Easier returns',0,{us:1}),O('Anywhere, I’ll wait for shipping')]}]},
+{n:'Your style',q:[
+ {k:'palette',q:'Which palette feels like you?',o:[O('Black and white','',{tailored:2,minimal:2},{sw:['#08080d','#ffffff','#8a8a8e']}),O('Neutrals','',{quiet:3,minimal:1},{sw:['#e8dccb','#c9b79c','#8f7a5e','#4a3b2c']}),O('Soft pastels','',{romantic:3},{sw:['#e9c9d0','#cfd9e6','#f3e8c8','#d9d2e9']}),O('Earth tones','',{easy:2,romantic:1},{sw:['#9a5a3a','#6e7a46','#c19a5b','#3d3126']}),O('Jewel tones','',{bold:2,quiet:1},{sw:['#1f4d3a','#5b2a6b','#7a1f3d','#1f2b4d']}),O('Bright color','',{bold:3},{sw:['#c8102e','#0b5fa5','#f2b705','#d77a98']})]},
+ {k:'shape',q:'What silhouette do you reach for?',o:[O('Fitted and sharp','',{tailored:3}),O('Relaxed and oversized','',{easy:2,minimal:1}),O('Flowy and feminine','',{romantic:3}),O('Structured and sculptural','',{bold:2,tailored:1,minimal:1}),O('Clean and simple','',{minimal:3,quiet:1})]},
+ {k:'materials',q:'Which fabrics do you keep noticing?',multi:1,hint:'Pick all that apply.',o:[O('Cashmere and fine knits','',{quiet:2}),O('Silk and satin','',{romantic:1,quiet:1}),O('Linen and cotton','',{easy:1,minimal:1}),O('Leather and suede','',{easy:1,bold:1,tailored:1}),O('Wool tailoring','',{tailored:2,quiet:1}),O('Lace and embroidery','',{romantic:2}),O('Denim','',{easy:2})]},
+ {k:'era',q:'Which eras do you love?',multi:1,hint:'Pick all that apply.',o:[O('Today','',{minimal:1,quiet:1}),O('1950s and 60s','',{tailored:1,romantic:1}),O('1970s','',{easy:1,romantic:1}),O('1980s','',{bold:2,tailored:1}),O('1990s minimalism','',{minimal:2,quiet:1}),O('Victorian and Edwardian','',{romantic:2})]},
+ {k:'pattern',q:'How do you feel about pattern?',o:[O('Solids, always','',{minimal:2,quiet:1}),O('Stripes and checks','',{easy:1,tailored:1}),O('Florals and prints','',{romantic:2,bold:1}),O('The bolder the better','',{bold:3})]}]},
+{n:'How you shop',q:[
+ {k:'condition',q:'How do you feel about pre-loved?',o:[O('New only'),O('Pre-loved in excellent condition'),O('Vintage with some wear is fine')]},
+ {k:'sizing',q:'How do you handle fit when you shop online?',o:[O('I know my sizes'),O('I need measurements'),O('I like to try things on first')]},
+ {k:'forwhom',q:'Who are you mostly shopping for?',o:[O('Myself'),O('Someone close to me'),O('Clients')]}]}];
+const HOMEX={ARCH,LIB,QZ,TYPES,TYPEKW},WEARX={ARCH:WARCH,LIB:WLIB,QZ:WQZ,TYPES:WTYPES,TYPEKW:WTYPEKW};
+function applySpace(){const X=sp()==='wear'?WEARX:HOMEX;ARCH=X.ARCH;LIB=X.LIB;QZ=X.QZ;TYPES=X.TYPES;TYPEKW=X.TYPEKW;
+  QS=QZ.flatMap(sec=>sec.q.map(q=>Object.assign({sec:sec.n},q)));QM=Object.fromEntries(QS.map(q=>[q.k,q]))}
+function setSpace(n){
+  const old=sp();if(n===old)return;
+  S.stash=S.stash||{};S.stash[old]={quiz:S.quiz,profile:S.profile,loved:S.loved};
+  const st=S.stash[n]||{quiz:{},profile:'',loved:{}};
+  S.quiz=st.quiz||{};S.profile=st.profile||'';S.loved=st.loved||{};S.space=n;applySpace();
+  tab='today';cat=-1;proj=null;CMP=[];PH=null;Q={i:0,a:{}};S.sf='All';S.tf='';S.pf='';Panel=null;save();render();window.scrollTo(0,0)}
+function vPeople(){
+  if(sp()!=='wear')return '';
+  const P=S.people||[];
+  let o=`<div class="sec"><h3>Shopping for</h3><span>You, friends, clients</span></div><div class="row"><button class="chip" aria-pressed="${!S.pf}" data-act="pf" data-id="">Everyone</button>${P.map(p=>`<span class="row" style="gap:4px;flex-wrap:nowrap"><button class="chip" aria-pressed="${S.pf===p.name}" data-act="pf" data-id="${esc(p.name)}">${esc(p.name)}</button><button class="mini" data-act="rmperson" data-id="${p.id}" aria-label="Remove ${esc(p.name)}">×</button></span>`).join('')}</div><form class="row" data-form="person" style="margin-top:10px"><input name="name" placeholder="Add a person, e.g. Mom, Sarah (client)" style="flex:1;min-width:200px" required><input name="notes" placeholder="Sizes, brands to avoid, budget" style="flex:1;min-width:200px"><button class="btn ghost">Add</button></form>`;
+  const cur=P.find(p=>p.name===S.pf);if(cur&&cur.notes)o+=`<p class="note" style="margin-top:8px">${esc(cur.name)}: ${esc(cur.notes)}</p>`;
+  return o}
+function whoSel(){return sp()==='wear'?`<label class="f">For<select name="who"><option value="">Me</option>${(S.people||[]).map(p=>`<option>${esc(p.name)}</option>`).join('')}</select></label>`:''}
+function fSave(){return sp()==='wear'?`<label class="f">Size<input name="size" placeholder="S, 6, 38"></label><label class="f">Condition<input name="cond" placeholder="New, excellent, flaws noted"></label>${whoSel()}`:`<label class="f">Size in inches (W x D x H)<input name="dims" placeholder="36 x 2 x 48"></label>`}
+
+Object.assign(SM,{"therealreal": [3], "vestiaire": [3], "depop": [1], "grailed": [2], "poshmark": [1], "ebayfashion": [1], "etsyvintage": [1], "dibsfashion": [3], "rebag": [3], "fashionphile": [3], "thredup": [1], "rubylane": [2], "wgaca": [3], "hardlyeverwornit": [3, 1], "beyondretro": [1, 1], "vinted": [1, 1], "mercari": [1], "collectorsquare": [3, 1], "yoogis": [3], "ssense": [3], "netaporter": [3], "mytheresa": [3], "farfetch": [3], "modaoperandi": [3], "shopbop": [2], "nordstrom": [2], "saks": [3], "neiman": [3], "bergdorf": [3], "browns": [3, 1], "luisaviaroma": [3, 1], "mrporter": [3], "reformation": [2], "doen": [2], "cos": [2], "aritzia": [2], "everlane": [2], "sezane": [2, 1], "ganni": [2, 1], "toteme": [3, 1], "khaite": [3], "therow": [3], "lemaire": [3, 1], "nililotan": [3], "frame": [2], "vince": [2], "rouje": [2, 1], "otherstories": [1], "cuyana": [2], "mansurgavriel": [2], "loefflerrandall": [2], "madewell": [1], "jcrew": [1], "quince": [1], "mejuri": [2], "catbird": [3], "missoma": [2, 1], "monicavinader": [2, 1], "jenniferfisher": [3], "sophiebuhai": [3], "lorenstewart": [3], "aurate": [2], "studs": [2], "analuisa": [1], "gorjana": [2], "pamelalove": [3], "warbyparker": [1], "polene": [3, 1]});
+const STAT=['Considering','Inquired','Purchased','Shipped','Delivered'];
+function lsGet(){try{return JSON.parse(localStorage.getItem(LS))}catch(e){return null}}
+function lsSet(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function save(){lsSet();if(JSON.stringify(S).length>230000)toast('Your library is getting large. Remove some uploaded photos to keep saving.');clearTimeout(saveT);saveT=setTimeout(async()=>{if(dbDoc){try{await dbDoc.set({json:JSON.stringify(S)})}catch(e){}}},600)}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+const srcAll=()=>BASE.map(b=>({id:b[0],name:b[1],cat:b[2],url:S.urls[b[0]]||b[3],tag:S.urls[b[0]]?'your link':b[4],note:b[5],custom:0}))
+  .concat(S.custom.map(c=>({id:c.id,name:c.name,cat:c.cat,url:S.urls[c.id]||c.url,tag:'your link',note:'Added by you.',custom:1}))).filter(s=>SPC(s.cat));
+const sources=()=>srcAll().filter(s=>!(S.hidden||{})[s.id]);
+const followed=()=>sources().filter(s=>S.follows[s.id]);
+function plate(s,extra=''){const p=PL[s.cat%PL.length];return `<div class="plate" style="background:linear-gradient(145deg,${p[0]},${p[1]})"><span class="mono">${esc(s.name[0])}</span>${S.covers&&S.covers[s.id]?`<img src="${esc(S.covers[s.id])}" alt="">`:''}<span class="cat">${esc(CATS[s.cat])}</span>${extra}</div>`}
+function srcCard(s,dash){
+  const on=!!S.follows[s.id],ck=(S.checked[today()]||{})[s.id],c=PL[s.cat%PL.length][0];
+  return `<div class="card src"><div class="body"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="note" style="font-size:12px">${esc(CATS[s.cat])}</span><span class="row" style="gap:6px;flex-wrap:nowrap">${dash?`<button class="sbtn ${ck?'on':''}" data-act="check" data-id="${s.id}" aria-label="Mark ${esc(s.name)} as looked at today">✓</button>`:''}<button class="sbtn ${on?'on':''}" data-act="follow" data-id="${s.id}" aria-pressed="${on}" aria-label="${on?'Unfollow':'Follow'} ${esc(s.name)}">${on?'★':'☆'}</button></span></div><h4>${esc(s.name)}</h4><p class="note">${esc(s.note)}</p><div class="acts"><a class="lnk" target="_blank" rel="noopener" href="${esc(s.url)}" data-act="visit" data-id="${s.id}">${s.tag==='direct'||s.tag==='your link'?'New arrivals':'Visit'}</a><button class="mini" data-act="editlink" data-id="${s.id}">edit link</button><button class="mini" data-act="hide" data-id="${s.id}">hide</button>${s.custom?`<button class="mini" data-act="rmsrc" data-id="${s.id}">remove</button>`:''}<span class="tag">${esc(s.tag)}</span></div></div></div>`}
+function head(){
+  const n={today:followed().length,saved:SV().length,projects:PJ().length};
+  const T=[['today','Today'],['sources','Sources'],['projects',sp()==='wear'?'Outfits':'Projects'],['saved','Saved'],['taste','Taste']];
+  return `<div class="mast"><h1 class="logo">ATELIER</h1></div><div class="row" style="justify-content:center;margin:-4px 0 14px"><button class="chip" aria-pressed="${sp()==='home'}" data-act="space" data-id="home">Home</button><button class="chip" aria-pressed="${sp()==='wear'}" data-act="space" data-id="wear">Wardrobe</button></div><div class="tabs" role="tablist">${T.map(t=>`<button class="tab" role="tab" aria-selected="${tab===t[0]}" data-act="tab" data-id="${t[0]}">${t[1]}${n[t[0]]?`<span class="badge">${n[t[0]]}</span>`:''}</button>`).join('')}</div>`}
+function vToday(){
+  const f=followed(),ck=S.checked[today()]||{},done=f.filter(s=>ck[s.id]).length,h=new Date().getHours();
+  const hi=h<12?'Good morning.':h<18?'Good afternoon.':'Good evening.';
+  let o=`<div class="hero"><h2 class="disp">${hi}</h2><p>${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}. ${f.length?`${f.length-done} of ${f.length} shops left to look in on today.`:'Follow a few shops and they will line up here every day.'}</p>${f.length?`<div class="bar"><i style="width:${done/f.length*100}%"></i></div>`:''}</div>`;
+  o+=vPeople();o+=`<div class="sec"><h3>Watching for</h3><span>Things you would hate to miss</span></div><form class="row" data-form="watch"><input name="q" placeholder="${WP()}" style="flex:1;min-width:200px" required><input name="max" inputmode="numeric" placeholder="Max $" style="width:110px"><button class="btn">Watch</button></form>`;
+  o+=WL().length?`<div class="row" style="margin-top:12px">${WL().map(w=>`<span class="pill">${esc(w.q)}${w.max?' under '+money(num(w.max)):''} <button class="mini" data-act="rmwatch" data-id="${w.id}">×</button></span>`).join('')}</div><p class="note" style="margin-top:8px">Each of these links to a search across your followed shops below. For a daily check that only sends matches, ask Claude to set up the scheduled watch.</p>${WL().map(w=>`<div class="note"><b style="font-weight:500;color:var(--ink)">${esc(w.q)}</b>: ${f.slice(0,6).map(s=>`<a target="_blank" rel="noopener" href="${esc(siteq(w.q+(w.max?' under $'+num(w.max):''),s))}">${esc(s.name)}</a>`).join(', ')||'follow a shop first'}</div>`).join('')}`:'';
+  o+=vPhoto();
+  o+=`<div class="sec"><h3>Your shops</h3><span>Tap a card’s check once you’ve looked</span></div>`;
+  o+=f.length?`<div class="grid">${f.map(s=>srcCard(s,1)).join('')}</div>`:`<div class="empty"><b>No shops followed yet</b>Take the taste quiz or browse Sources and tap the star.<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" data-act="tab" data-id="taste">Take the quiz</button><button class="btn ghost" data-act="tab" data-id="sources">Browse sources</button></div></div>`;
+  return o}
+function vPhoto(){
+  let o=`<div class="sec"><h3>Search by photo</h3><span>Upload a piece you love</span></div><div class="form"><label class="f wide">Photo<input type="file" accept="image/*" data-file="photo"></label></div>`;
+  if(PH==='busy')o+='<p class="note">Looking closely…</p>';
+  else if(PH&&PH.err)o+=`<p class="note">${esc(PH.err)}</p>`;
+  else if(PH){const f=followed().slice(0,6),use=f.length?f:sources().slice(0,4);
+    o+=`<div class="prose" style="font-size:16px">${esc(PH.desc)}</div>`+PH.queries.map(q=>`<div class="note" style="margin-top:8px"><b style="font-weight:500;color:var(--ink)">${esc(q)}</b>: ${use.map(s=>`<a target="_blank" rel="noopener" href="${esc(siteq(q,s))}">${esc(s.name)}</a>`).join(', ')} <button class="mini" data-act="watchq" data-id="${esc(q)}">watch this</button></div>`).join('')}
+  return o}
+async function photoSearch(file){
+  if(!file)return;PH='busy';render();let sm;try{sm=await claude.use('sample')}catch(e){}
+  if(!sm){PH={err:'Photo search is not available here.'};render();return}
+  try{const r=await sm.json(PHP(),{images:file,cache:false});
+    PH={desc:String(r.desc||''),queries:(r.queries||[]).slice(0,5).map(String)}}
+  catch(e){PH={err:e.code==='images_unavailable'?'This view cannot send photos to Claude.':'Could not read that photo. Try another.'}}
+  render()}
+function vSources(){
+  const all=sources(),cs=[...new Set(all.map(s=>s.cat))].sort((a,b)=>a-b);
+  let o=`<div class="chips"><button class="chip" aria-pressed="${cat===-1}" data-act="cat" data-id="-1">All</button>${cs.map(c=>`<button class="chip" aria-pressed="${cat===c}" data-act="cat" data-id="${c}">${CATS[c]}</button>`).join('')}</div><div class="grid">${all.filter(s=>cat<0||s.cat===cat).map(s=>srcCard(s,0)).join('')}</div>`;
+  const hid=srcAll().filter(x=>(S.hidden||{})[x.id]);
+  if(hid.length)o+=`<div class="sec"><h3>Hidden</h3><span>Sources you chose not to see</span></div><div class="row">${hid.map(x=>`<span class="pill">${esc(x.name)} <button class="mini" data-act="unhide" data-id="${x.id}">restore</button></span>`).join('')}</div>`;
+  o+=`<div class="sec"><h3>Add a source of your own</h3></div><form class="form" data-form="src"><label class="f">Name<input name="name" required></label><label class="f">Website<input name="url" required placeholder="shop.com/new-arrivals"></label><label class="f">Type<select name="cat">${CATS.map((c,i)=>SPC(i)?`<option value="${i}">${c}</option>`:'').join('')}</select></label><div class="wide"><button class="btn">Add and follow</button></div></form>`;
+  return o}
+function tot(p){return p.items.reduce((a,i)=>{const x=S.saved.find(s=>s.id===i.sid);return a+(x?mk(p,x):0)},0)}
+function mk(p,x){return num(x.price)*(1+num(p.markup)/100)}
+function parseDims(s){return (String(s||'').match(/\d+(\.\d+)?/g)||[]).map(Number)}
+function fit(p,i,x){const w=num(p.rw),l=num(p.rl),d=parseDims(x.dims);if(!w||!l||d.length<2)return '';const big=Math.max(d[0],d[1]);if(big>Math.max(w,l)*12)return 'Too big';return d[0]*d[1]/(w*l*144)>(i.slot==='Rugs'?.7:.3)?'Tight':'Fits'}
+function dropped(i){return i.hist&&i.hist.length>1&&num(i.hist[i.hist.length-1])<num(i.hist[i.hist.length-2])}
+const siteq=(q,s)=>{let h='';try{h=new URL(s.url).hostname.replace(/^www\./,'')}catch(e){}return G(h&&!/google\./.test(h)?q+' site:'+h:q+' '+s.name)};
+function vProjects(){
+  if(proj){const p=S.projects.find(x=>x.id===proj);if(p)return vProject(p);proj=null}
+  let o=`<form class="form" data-form="proj"><label class="f">${sp()==='wear'?'New outfit or occasion':'New room or project'}<input name="name" placeholder="${sp()==='wear'?'Weekend in Paris':'Living room'}" required></label><label class="f">Budget<input name="budget" inputmode="numeric" placeholder="15000"></label>${whoSel()}<div style="align-self:end"><button class="btn">Create</button></div></form>`;
+  o+=PJ().length?`<div class="grid">${PJ().map(p=>{const t=tot(p),b=num(p.budget);return `<div class="card"><div class="plate" style="background:linear-gradient(145deg,${PL[p.name.length%8][0]},${PL[p.name.length%8][1]})"><span class="mono">${esc(p.name[0])}</span><span class="cat">${p.items.length} shortlisted · ${p.board.length} on the board</span></div><div class="body"><h4>${esc(p.name)}</h4>${p.who?`<p class="note">For ${esc(p.who)}</p>`:''}${b?`<div class="bar"><i style="width:${Math.min(100,t/b*100)}%"></i></div><p class="note">${money(t)} of ${money(b)}</p>`:`<p class="note">${money(t)} shortlisted</p>`}<div class="acts"><button class="lnk" style="background:none;border-width:0 0 1px;cursor:pointer" data-act="openproj" data-id="${p.id}">Open</button><button class="mini" data-act="rmproj" data-id="${p.id}">delete</button></div></div></div>`}).join('')}</div>`:`<div class="empty">${sp()==='wear'?'<b>Start with one outfit</b>Pick an occasion, add a budget, then shortlist the dress, the shoes, the bag.':'<b>Start with one room</b>Give it a budget, then shortlist the rug, the sofa, the mirror.'}</div>`;
+  return o}
+function vProject(p){
+  const t=tot(p),b=num(p.budget);
+  let o=`<div class="row"><button class="btn ghost" data-act="back">Back</button><h2 class="disp" style="font-size:38px">${esc(p.name)}</h2></div>`;
+  o+=`<p class="note">${b?`${money(t)} of ${money(b)} budget${t>b?' <b style="color:var(--danger)">(over by '+money(t-b)+')</b>':', '+money(b-t)+' left'}`:money(t)+' shortlisted'}${num(p.markup)?' (includes your '+num(p.markup)+'% markup)':''}</p>${b?`<div class="bar"><i style="width:${Math.min(100,t/b*100)}%"></i></div>`:''}`;
+  o+=`<form class="row" data-form="room" style="margin:10px 0">${sp()==='wear'?'':`<label class="f">Room width (ft)<input name="rw" inputmode="decimal" value="${esc(p.rw||'')}" style="width:120px"></label><label class="f">Room length (ft)<input name="rl" inputmode="decimal" value="${esc(p.rl||'')}" style="width:120px"></label>`}<label class="f">Your markup %<input name="markup" inputmode="decimal" value="${esc(p.markup||'')}" style="width:120px"></label><button class="btn ghost" style="align-self:end">Update</button></form>`;
+  o+=`<div class="sec"><h3>Shortlist</h3><span>Pull in anything from Saved</span></div>`;
+  const avail=SV().filter(x=>!p.items.some(i=>i.sid===x.id));
+  if(avail.length)o+=`<form class="row" data-form="additem"><select name="sid" style="max-width:340px">${avail.map(x=>`<option value="${x.id}">${esc(x.title)}${x.price?' ('+esc(x.price)+')':''}</option>`).join('')}</select><select name="slot" style="max-width:180px">${(sp()==='wear'?SLOTS:FOLDERS).map(f=>`<option>${f}</option>`).join('')}</select><button class="btn">Add to shortlist</button></form>`;
+  if(p.items.length){
+    o+=`<table class="tbl" style="margin-top:10px">${p.items.map(i=>{const x=S.saved.find(s=>s.id===i.sid)||{title:'(removed item)',price:''};const ft=fit(p,i,x),v=FB&&FB[i.sid];
+      return `<tr><td><b style="font-weight:500">${esc(x.title)}</b>${x.sold?' <span class="pill">Sold</span>':''}${ft?` <span class="pill" ${ft==='Too big'?'style="color:var(--danger)"':''}>${ft}</span>`:''}${v?` <span class="pill">${v.yes||0} approve · ${v.no||0} pass</span>`:''}<br><span class="note">${esc(i.slot)}${x.shop?' · '+esc(x.shop):''}${x.dims?' · '+esc(x.dims)+' in':''}</span><br><label class="note"><input type="checkbox" data-act="cmp" data-id="${i.sid}" ${CMP.includes(i.sid)?'checked':''} style="width:auto"> compare</label></td><td>${esc(num(p.markup)?money(mk(p,x)):x.price)}<br><button class="mini" data-act="rmitem" data-id="${i.sid}">remove</button></td></tr>`}).join('')}</table>`;
+    const cs=CMP.map(id=>({i:p.items.find(i=>i.sid===id),x:S.saved.find(s=>s.id===id)})).filter(c=>c.i&&c.x);
+    if(cs.length>=2){const R=[['Shop',c=>c.x.shop],['Price',c=>c.x.price],['Size (in)',c=>c.x.dims],['Status',c=>c.x.sold?'Sold':(c.x.status||'Considering')],['Fit',c=>fit(p,c.i,c.x)],['Taste match',c=>c.x.match?c.x.match.s+'/10':'']];
+      o+=`<div class="sec"><h3>Compare</h3></div><div style="overflow-x:auto"><table class="tbl"><tr><td></td>${cs.map(c=>`<td style="text-align:left"><b style="font-weight:500">${esc(c.x.title)}</b></td>`).join('')}</tr>${R.map(r=>`<tr><td class="note">${r[0]}</td>${cs.map(c=>`<td style="text-align:left">${esc(r[1](c)||'–')}</td>`).join('')}</tr>`).join('')}</table></div>`}
+  } else o+=`<div class="empty" style="margin-top:10px">Nothing shortlisted yet. Save items on the Saved tab, then add them here.</div>`;
+  o+=`<div class="sec"><h3>Mood board</h3><span>Photos, Pinterest pins and notes</span></div><div class="form"><label class="f wide">Upload inspiration photos<input type="file" accept="image/*" multiple data-file="board"></label><form data-form="pin" class="row wide" style="flex-wrap:nowrap"><input name="u" placeholder="Paste a Pinterest pin or board link (or any image page)" required><button class="btn">Add</button></form><form data-form="note" class="row wide" style="flex-wrap:nowrap"><input name="t" placeholder="Add a note, palette or material" required><button class="btn ghost">Add note</button></form></div>`;
+  o+=p.board.length?`<div class="board">${p.board.map(m=>`<div class="pin ${m.type==='pin'?'pinterest':''}">${m.type==='img'?`<img src="${esc(m.src)}" alt="${esc(m.cap||'Inspiration')}">`:''}<div>${m.type==='pin'?`<a target="_blank" rel="noopener" href="${esc(m.url)}">${/pinterest|pin\.it/i.test(m.url)?'Open on Pinterest':'Open link'}</a><br>`:''}${esc(m.cap||'')} <button class="mini" data-act="rmpin" data-id="${m.id}">remove</button></div></div>`).join('')}</div>`:`<div class="empty"><b>An empty board</b>Upload photos, or paste Pinterest links to keep them beside your shortlist.</div>`;
+  o+=`<details style="margin-top:12px"><summary>Why can’t I see my Pinterest boards here?</summary><p class="note">Pinterest does not allow its boards to be embedded in other pages, and pulling them in automatically needs a Pinterest developer connection. For now, paste links and they stay with the room; save a photo from Pinterest and upload it to see it here.</p></details>`;
+  o+=`<div class="sec"><h3>Client</h3></div><div class="row"><button class="btn" data-act="share" data-id="${p.id}">${p.shareId?'Update client link':'Create client link'}</button>${p.shareId?`<button class="btn ghost" data-act="loadfb" data-id="${p.id}">Check responses</button>`:''}<button class="btn ghost" data-act="quote" data-id="${p.id}">Download quote</button></div><p class="note" id="shareOut">${p.shareId?'Link made. Update it after you change the shortlist.':'The link shows a read-only board where your client can approve or pass on each item.'}</p>`;
+  if(FB&&FB._n&&FB._n.length)o+=`<div class="prose" style="font-size:16px">${FB._n.map(esc).join('\n\n')}</div>`;
+  return o}
+function vSaved(){
+  const f=S.sf||'All',tg=S.tf||'';let o='';
+  if(Panel)o+=`<div class="form"><div class="wide"><b style="font-weight:500">${esc(Panel.title)}</b></div><textarea class="wide" rows="9" id="panelTxt">${esc(Panel.text)}</textarea><div class="wide row"><button class="btn" data-act="copypanel">Copy</button><button class="btn ghost" data-act="closepanel">Close</button></div></div>`;
+  o+=`<form class="form" data-form="save"><label class="f">Item name<input name="title" required placeholder="${sp()==='wear'?'Vintage silk slip dress':'Gio Ponti style brass mirror'}"></label><label class="f">Type<select name="type"><option value="">Auto-detect</option>${TYPES.map(x=>`<option>${x}</option>`).join('')}</select></label><label class="f">Shop<input name="shop" placeholder="Incollect"></label><label class="f">Price<input name="price" placeholder="$6,670"></label>${fSave()}<label class="f">Tags, separated by commas<input name="tags" placeholder="brass, 1970s, living room"></label><label class="f">Link<input name="url" placeholder="https://"></label><label class="f">Photo<input type="file" accept="image/*" data-file="item"></label><div class="wide"><button class="btn">Save item</button></div></form>`;
+  o+=`<details style="margin-bottom:16px"><summary>Import from the Atelier Chrome extension</summary><div class="row" style="margin-top:8px;flex-wrap:nowrap"><textarea id="imp" rows="2" placeholder="Paste what the extension copied"></textarea><button class="btn" data-act="import">Import</button></div></details>`;
+  if(sp()==='wear'&&(S.people||[]).length)o+=`<div class="chips" style="margin-bottom:12px"><span class="note" style="align-self:center">For</span><button class="chip" aria-pressed="${!S.pf}" data-act="pf" data-id="">Everyone</button>${S.people.map(p=>`<button class="chip" aria-pressed="${S.pf===p.name}" data-act="pf" data-id="${esc(p.name)}">${esc(p.name)}</button>`).join('')}</div>`;
+  const usedT=TYPES.filter(x=>SV().some(i=>ty(i)===x)),tags=[...new Set(SV().flatMap(i=>i.tags||[]))].sort();
+  o+=`<div class="row" style="justify-content:space-between;margin-bottom:10px"><div class="chips" style="margin:0">${['All','Orders',...usedT].map(x=>`<button class="chip" aria-pressed="${f===x}" data-act="sf" data-id="${esc(x)}">${esc(x)}${x!=='All'&&x!=='Orders'?` <span style="opacity:.6">${SV().filter(i=>ty(i)===x).length}</span>`:''}</button>`).join('')}</div>${SV().length?`<button class="btn ghost" data-act="match">Score against my taste</button>`:''}</div>`;
+  if(tags.length)o+=`<div class="chips" style="margin-bottom:18px"><span class="note" style="align-self:center">Tags</span>${tags.map(x=>`<button class="chip" aria-pressed="${tg===x}" data-act="tf" data-id="${esc(x)}">#${esc(x)}</button>`).join('')}</div>`;
+  const L=SV().filter(i=>(!S.pf||sp()!=='wear'||i.who===S.pf)&&(f==='All'||(f==='Orders'?(i.status||'Considering')!=='Considering':ty(i)===f))&&(!tg||(i.tags||[]).includes(tg)));
+  o+=L.length?`<div class="grid">${L.map(i=>{const t=ty(i),k=Math.max(0,TYPES.indexOf(t));const badge=i.sold?'Sold':dropped(i)?'Price dropped':'';
+    return `<div class="card item"><div class="plate tall" style="background:linear-gradient(145deg,${PL[k%8][0]},${PL[k%8][1]})">${i.img?`<img src="${esc(i.img)}" alt="${esc(i.title)}">`:`<span class="mono">${esc(i.title[0])}</span>`}${badge?`<span style="position:absolute;left:12px;top:12px;background:#fff;color:#1c1714;font-size:11px;padding:2px 9px;border-radius:10px;z-index:2">${badge}</span>`:''}</div><div class="body"><p class="kick">${esc(t)}</p><h4>${esc(i.title)}</h4><p class="note">${esc([i.shop,i.price].filter(Boolean).join(' · '))}${i.dims?' · '+esc(i.dims)+' in':''}${i.size?' · size '+esc(i.size):''}${i.cond?' · '+esc(i.cond):''}${i.who?' · for '+esc(i.who):''}</p>${i.match?`<p class="note"><b style="font-weight:500;color:var(--brass-ink)">Taste match ${i.match.s}/10.</b> ${esc(i.match.why)}</p>`:''}<div class="row" style="gap:6px">${(i.tags||[]).map(x=>`<span class="pill">#${esc(x)} <button class="mini" data-act="rmtag" data-id="${i.id}" data-tag="${esc(x)}" aria-label="Remove tag ${esc(x)}">×</button></span>`).join('')}<input data-chg="addtag" data-id="${i.id}" placeholder="+ add tag" aria-label="Add a tag" style="width:110px;padding:3px 8px;font-size:13px"></div><select data-chg="type" data-id="${i.id}" aria-label="Product type">${TYPES.map(x=>`<option ${x===t?'selected':''}>${x}</option>`).join('')}</select><select data-chg="status" data-id="${i.id}" aria-label="Order status">${STAT.map(x=>`<option ${x===(i.status||'Considering')?'selected':''}>${x}</option>`).join('')}</select><input data-chg="track" data-id="${i.id}" value="${esc(i.track||'')}" placeholder="Tracking or order notes" aria-label="Tracking or order notes"><div class="acts">${i.url?`<a class="lnk" target="_blank" rel="noopener" href="${esc(url(i.url))}">View listing</a>`:''}<button class="mini" data-act="inquire" data-id="${i.id}">draft inquiry</button><button class="mini" data-act="editprice" data-id="${i.id}">update price</button><button class="mini" data-act="sold" data-id="${i.id}">${i.sold?'not sold':'mark sold'}</button><button class="mini" data-act="rmsaved" data-id="${i.id}">remove</button></div></div></div>`}).join('')}</div>`:`<div class="empty"><b>${f==='Orders'?'No orders yet':'Nothing here yet'}</b>${f==='Orders'?'Set an item’s status to Inquired or beyond and it shows up here.':'Add an item above, or clear a filter to see everything.'}</div>`;
+  return o}
+function swatch(c){return `<span class="sw">${c.map(x=>`<i style="background:${x}"></i>`).join('')}</span>`}
+function vTaste(){
+  if(Q.on&&Q.res)return vResult();
+  if(Q.on){const q=QS[Q.i],sel=Q.a[q.k]||[];
+    return `<div class="q"><div class="bar"><i style="width:${Q.i/QS.length*100}%"></i></div><span class="pill">${q.sec} · ${Q.i+1} of ${QS.length}</span><h2 class="disp" style="margin:14px 0 4px">${q.q}</h2>${q.hint?`<p class="note">${q.hint}</p>`:''}<div class="opts">${q.o.map((o,j)=>`<button class="opt" aria-pressed="${sel.includes(j)}" data-act="qa" data-id="${j}">${o.sw?swatch(o.sw):''}<b>${esc(o.l)}</b>${o.s?`<span>${esc(o.s)}</span>`:''}</button>`).join('')}</div><div class="row" style="margin-top:16px">${Q.i?`<button class="btn ghost" data-act="qback">Back</button>`:''}${q.multi?`<button class="btn" data-act="qnext" ${sel.length?'':'disabled'}>${Q.i===QS.length-1?'See my results':'Next'}</button>`:''}<button class="mini" data-act="qskip">skip</button></div></div>`}
+  const Z=S.quiz,A=Z.arch&&ARCH[Z.arch];
+  let o=`<div class="row" style="justify-content:space-between"><div><h2 class="disp" style="font-size:44px">${A?esc(A.n):'Your taste'}</h2><p class="note" style="max-width:520px">${A?esc(A.t)+(Z.second?' With a touch of '+esc(ARCH[Z.second].n)+'.':''):'A short quiz about your style, budget and how you shop. We use it to suggest shops, searches and a style brief.'}</p>${A?`<div class="row" style="margin-top:8px">${pick(Z.answers,'palette').map(p=>swatch(p.sw)).join('')}${[...pick(Z.answers,'materials'),...pick(Z.answers,'era')].map(x=>`<span class="pill">${esc(x.l)}</span>`).join('')}</div>`:''}</div><div class="row">${A?`<button class="btn ghost" data-act="qresults">Shop picks</button><button class="btn ghost" data-act="qedit">Edit answers</button>`:''}<button class="btn" data-act="quiz">${A?'Retake quiz':'Take the quiz'}</button></div></div>`;
+  o+=`<div class="sec"><h3>Style brief</h3><span>Based on your quiz, loves and saves</span></div>${S.profile?`<div class="prose">${esc(S.profile)}</div>`:''}<div class="row" style="margin-top:10px"><button class="btn ghost" data-act="${Z.done?'qbrief':'analyze'}">${S.profile?'Refresh my style brief':'Write my style brief'}</button></div>`;
+  o+=`<div class="sec"><h3>Library</h3><span>Tap the names you love</span></div>`;
+  o+=Object.entries(LIB).map(([k,v])=>`<details ${k===Object.keys(LIB)[0]?'open':''} style="margin-bottom:12px"><summary>${k} <span class="badge">${v.filter(n=>S.loved[n]).length}/${v.length}</span></summary><div class="lib" style="margin-top:10px">${v.map(n=>`<button class="chip" aria-pressed="${!!S.loved[n]}" data-act="love" data-id="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`).join('');
+  return o}
+function vResult(){
+  const a=Q.a,r=score(a),A=ARCH[S.quiz.arch||r[0][0]],sec=S.quiz.second&&ARCH[S.quiz.second],shops=recShops(a),life=pick(a,'life').map(x=>x.l);
+  const needs=pick(a,'need').filter(x=>x.ph);
+  let o=`<div class="q"><span class="pill">Your results</span><h2 class="disp" style="font-size:54px;line-height:1;margin:14px 0 8px">${esc(A.n)}</h2><p style="font:400 20px/1.5 'Newsreader',serif;max-width:620px;margin:0">${esc(A.t)}${sec?' With a touch of '+esc(sec.n)+'.':''}</p>`;
+  o+=`<div class="row" style="margin:14px 0">${pick(a,'palette').map(p=>swatch(p.sw)+`<span class="note">${esc(p.l)}</span>`).join('')}${[...pick(a,'materials'),...pick(a,'era'),...pick(a,'shape')].map(x=>`<span class="pill">${esc(x.l)}</span>`).join('')}</div>`;
+  o+=`<div class="sec"><h3>Look for</h3></div><ul style="margin:0;padding-left:20px">${A.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`;
+  if(life.some(x=>x==='Kids'||x==='Pets'))o+=`<p class="note" style="margin-top:12px">With ${life.filter(x=>x==='Kids'||x==='Pets').join(' and ').toLowerCase()} in the house, look for performance or washable fabrics on main seating, and save delicate antique upholstery for accent pieces.</p>`;
+  if(needs.length)o+=`<div class="sec"><h3>Start watching for</h3><span>One tap adds it to Today</span></div><div class="row">${needs.map(n=>{const q=A.look+' '+n.ph;return `<button class="chip" data-act="watchq" data-id="${esc(q)}">+ ${esc(q)}</button>`}).join('')}</div>`;
+  o+=`<div class="sec"><h3>Shops for you</h3><span>${shops.length?'Uncheck any you don’t want':''}</span></div>`;
+  o+=shops.length?`<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">${shops.map(s=>`<label class="card" style="padding:12px 14px;flex-direction:row;gap:10px;align-items:flex-start;cursor:pointer"><input type="checkbox" data-act="qtog" data-id="${s.id}" ${Q.sel.includes(s.id)?'checked':''} style="width:auto;margin-top:4px"><span><b style="font:500 20px 'Newsreader',serif">${esc(s.name)}</b><br><span class="note">${esc(CATS[s.cat])}</span></span></label>`).join('')}</div>`:`<div class="empty">No matches for those answers. Edit your answers or browse Sources.</div>`;
+  o+=`<div class="row" style="margin-top:20px"><button class="btn" data-act="qfollow">Follow ${Q.sel.length} shops</button><button class="btn ghost" data-act="qbrief">Write my style brief</button><button class="btn ghost" data-act="qedit">Edit answers</button></div></div>`;
+  return o}
+function vShare(d){
+  if(!d||d.missing)return `<div class="empty"><b>This board isn’t available</b>The link may be old, or you may need to sign in to view it.</div>`;
+  const t=d.items.reduce((a,i)=>a+num(i.price),0),bd=(MY&&MY.boards&&MY.boards[d.id])||{votes:{},note:''};
+  return `<div class="mast"><h1 class="logo">${esc(d.name)}</h1><span class="sub">A selection prepared with Atelier</span></div><div class="sec"><h3>Selections</h3><span>${money(t)} total${d.budget?' of '+money(num(d.budget)):''}</span></div><div class="grid">${d.items.map(i=>{const v=bd.votes[i.k];return `<div class="card"><div class="plate" style="background:linear-gradient(145deg,${PL[(i.t||'a').length%8][0]},${PL[(i.t||'a').length%8][1]})">${i.img?`<img src="${esc(i.img)}" alt="${esc(i.t)}">`:`<span class="mono">${esc((i.t||'?')[0])}</span>`}<span class="cat" style="z-index:1">${esc(i.slot)}</span></div><div class="body"><h4>${esc(i.t)}</h4><p class="note">${esc([i.shop,i.price].filter(Boolean).join(' · '))}${i.dims?' · '+esc(i.dims)+' in':''}</p><div class="acts">${i.url?`<a class="lnk" target="_blank" rel="noopener" href="${esc(url(i.url))}">View listing</a>`:''}</div><div class="row"><button class="btn ${v==='yes'?'':'ghost'}" data-act="vote" data-id="${esc(i.k)}" data-v="yes">${v==='yes'?'Approved':'Approve'}</button><button class="btn ${v==='no'?'':'ghost'}" data-act="vote" data-id="${esc(i.k)}" data-v="no">${v==='no'?'Passed':'Not for me'}</button></div></div></div>`}).join('')}</div>${d.board.length?`<div class="sec"><h3>Mood</h3></div><div class="board">${d.board.map(m=>`<div class="pin">${m.src?`<img src="${esc(m.src)}" alt="">`:''}<div>${esc(m.cap||'')}${m.url?` <a target="_blank" rel="noopener" href="${esc(m.url)}">Link</a>`:''}</div></div>`).join('')}</div>`:''}<form class="row" data-form="fnote" style="margin-top:24px"><input name="n" value="${esc(bd.note||'')}" placeholder="Anything you want to tell your designer?" style="flex:1;min-width:200px"><button class="btn">Send note</button></form>`}
+function render(){
+  const el=$('#app');
+  if(shareMode){el.innerHTML=shareMode==='loading'?'<p class="note" style="padding:40px 0">Loading board…</p>':vShare(shareMode);return}
+  if(!ready){el.innerHTML=head()+'<p class="note">Loading your things…</p>';return}
+  const v={today:vToday,sources:vSources,projects:vProjects,saved:vSaved,taste:vTaste}[tab]();
+  const ae=document.activeElement,keep=ae&&ae.form?null:null;
+  el.innerHTML=head()+v}
+// downscale image for fallback storage
+function shrink(file,max=700){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.72))};im.onerror=()=>r('');im.src=fr.result};fr.onerror=()=>r('');fr.readAsDataURL(file)})}
+async function keepImage(file){
+  try{const a=await claude.use('assets');if(a){const r=await a.upload(file);return r.url}}catch(e){}
+  return shrink(file)}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id;
+  if(a==='visit')return;
+  if(a==='vote')return vote(id,b.dataset.v);
+  if(a==='tab'){tab=id;proj=null;Q.on=0}
+  else if(a==='follow'){S.follows[id]?delete S.follows[id]:S.follows[id]=1;save()}
+  else if(a==='check'){const d=today();S.checked={[d]:{...(S.checked[d]||{})}};S.checked[d][id]?delete S.checked[d][id]:S.checked[d][id]=1;save()}
+  else if(a==='cat')cat=+id;
+  else if(a==='editlink'){const s=sources().find(x=>x.id===id);const card=b.closest('.acts');card.innerHTML=`<input id="nl" value="${esc(s.url)}" style="flex:1"><button class="btn" data-act="savelink" data-id="${id}">Save</button>`;return}
+  else if(a==='savelink'){const v=$('#nl').value.trim();if(v)S.urls[id]=url(v);save()}
+  else if(a==='rmsrc'){S.custom=S.custom.filter(c=>c.id!==id);delete S.follows[id];save()}
+  else if(a==='rmwatch'){S.watch=S.watch.filter(w=>w.id!==id);save()}
+  else if(a==='openproj')proj=id;
+  else if(a==='back')proj=null;
+  else if(a==='rmproj'){S.projects=S.projects.filter(p=>p.id!==id);save()}
+  else if(a==='rmitem'){const p=S.projects.find(x=>x.id===proj);p.items=p.items.filter(i=>i.sid!==id);save()}
+  else if(a==='rmpin'){const p=S.projects.find(x=>x.id===proj);p.board=p.board.filter(i=>i.id!==id);save()}
+  else if(a==='sf'){S.sf=id}
+  else if(a==='tf'){S.tf=S.tf===id?'':id}
+  else if(a==='rmtag'){const i=S.saved.find(x=>x.id===id);i.tags=(i.tags||[]).filter(x=>x!==b.dataset.tag);save()}
+  else if(a==='rmsaved'){S.saved=S.saved.filter(i=>i.id!==id);S.projects.forEach(p=>p.items=p.items.filter(i=>i.sid!==id));save()}
+  else if(a==='love'){S.loved[id]?delete S.loved[id]:S.loved[id]=1;save()}
+  else if(a==='quiz'){Q={i:0,a:{},on:1}}
+  else if(a==='qedit'){Q={i:0,a:JSON.parse(JSON.stringify(S.quiz.answers||{})),on:1}}
+  else if(a==='qresults'){Q={i:0,a:S.quiz.answers||{},on:1,res:1,sel:recShops(S.quiz.answers||{}).map(x=>x.id)}}
+  else if(a==='qback'){Q.i=Math.max(0,Q.i-1)}
+  else if(a==='qskip'||a==='qnext'){qadv()}
+  else if(a==='qtog'){Q.sel=Q.sel.includes(id)?Q.sel.filter(x=>x!==id):[...Q.sel,id]}
+  else if(a==='qfollow'){Q.sel.forEach(x=>S.follows[x]=1);Q.on=0;Q.res=0;save();toast('Followed '+Q.sel.length+' shops')}
+  else if(a==='qbrief')return qbrief(b);
+  else if(a==='qa'){const q=QS[Q.i],j=+id,c=Q.a[q.k]||[];Q.a[q.k]=q.multi?(c.includes(j)?c.filter(x=>x!==j):[...c,j]):[j];if(!q.multi)qadv()}
+  else if(a==='cover'){const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=async()=>{const f=inp.files[0];if(!f)return;const u=await keepImage(f);if(u){S.covers=S.covers||{};S.covers[id]=u;save();render()}};inp.click();return}
+  else if(a==='cmp'){CMP=CMP.includes(id)?CMP.filter(x=>x!==id):[...CMP,id]}
+  else if(a==='editprice'){const i=S.saved.find(x=>x.id===id);b.closest('.acts').innerHTML=`<input id="np" value="${esc(i.price)}" style="flex:1"><button class="btn" data-act="saveprice" data-id="${id}">Save</button>`;return}
+  else if(a==='saveprice'){const i=S.saved.find(x=>x.id===id);const v=$('#np').value.trim();if(v!==i.price){i.hist=[...(i.hist||[i.price]),v];i.price=v}save()}
+  else if(a==='sold'){const i=S.saved.find(x=>x.id===id);i.sold=!i.sold;save()}
+  else if(a==='inquire')return inquire(id);
+  else if(a==='closepanel')Panel=null;
+  else if(a==='copypanel'){const t=$('#panelTxt');try{await navigator.clipboard.writeText(t.value);toast('Copied')}catch(e){t.select()}return}
+  else if(a==='match')return matchAll(b);
+  else if(a==='import')return doImport();
+  else if(a==='watchq'){S.watch.push({id:uid(),space:sp(),q:id});save();toast('Added to watching')}
+  else if(a==='space')return setSpace(id);
+  else if(a==='hide'){S.hidden=S.hidden||{};S.hidden[id]=1;delete S.follows[id];save();toast('Hidden. Restore it at the bottom of Sources.')}
+  else if(a==='unhide'){delete (S.hidden||{})[id];save()}
+  else if(a==='pf')S.pf=id||'';
+  else if(a==='rmperson'){S.people=(S.people||[]).filter(p=>p.id!==id);save()}
+  else if(a==='quote')return quote(id);
+  else if(a==='loadfb')return loadFB(id);
+  else if(a==='share')return doShare(id,b);
+  else if(a==='analyze')return analyze(b);
+  render()});
+function qadv(){Q.i++;if(Q.i>=QS.length)finishQuiz()}
+function score(a){const sc=Object.fromEntries(Object.keys(ARCH).map(k=>[k,0]));QS.forEach(q=>pick(a,q.k).forEach(o=>{if(o.w)for(const k in o.w)sc[k]+=o.w[k]}));return Object.entries(sc).sort((x,y)=>y[1]-x[1])}
+function recShops(a){
+  const cats=new Set();['hunt','need'].forEach(k=>pick(a,k).forEach(o=>(o.cats||[]).forEach(c=>cats.add(c))));
+  const tier=(pick(a,'budget')[0]||{}).tier||3,us=!!(pick(a,'region')[0]||{}).us;
+  if(!cats.size)(sp()==='wear'?[10,11,12]:[0,1,3]).forEach(c=>cats.add(c));
+  return sources().filter(s=>{const m=SM[s.id]||[3];return cats.has(s.cat)&&m[0]<=tier&&!(us&&m[1])}).slice(0,12)}
+function finishQuiz(){
+  const a=JSON.parse(JSON.stringify(Q.a)),r=score(a),arch=r[0][0],second=r[1][1]>0&&r[1][1]>=r[0][1]*.6?r[1][0]:null;
+  const L=k=>pick(a,k).map(o=>o.l.toLowerCase()).join(', ');
+  let summary=`${ARCH[arch].n}${second?' with a touch of '+ARCH[second].n:''}. Palette: ${L('palette')||'n/a'}. Materials: ${L('materials')||'n/a'}. Eras: ${L('era')||'n/a'}. Shapes: ${L('shape')||'n/a'}. Pattern: ${L('pattern')||'n/a'}. Fullness: ${L('fullness')||'n/a'}. Condition: ${L('condition')||'n/a'}. Budget: ${L('budget')||'n/a'}. Household: ${L('life')||'n/a'}. Sourcing: ${L('need')||'n/a'}.`;
+  if(sp()==='wear')summary=ARCH[arch].n+(second?' with a touch of '+ARCH[second].n:'')+'. '+QS.map(q=>q.k+': '+(L(q.k)||'n/a')).join('. ')+'.';
+  S.quiz={done:1,arch,second,answers:a,mood:summary};
+  Q.a=a;Q.res=1;Q.sel=recShops(a).map(x=>x.id);save()}
+async function qbrief(btn){
+  let sm;try{sm=await claude.use('sample')}catch(e){}
+  if(!sm){toast('Style brief is not available here');return}
+  btn.disabled=true;btn.textContent='Writing…';
+  try{const r=await sm(`You are a ${ROLE()}. Write a warm style brief for a client from their quiz. Start with a 2-4 word style name on its own line. Then 2 short paragraphs on what they respond to. Then 6 specific sourcing keywords or phrases they could use when searching vintage and new shops. Plain text, no markdown.\n${S.quiz.mood}`,{cache:false});S.profile=r.text.trim();save()}
+  catch(e){toast('Could not reach Claude just now')}
+  render()}
+document.addEventListener('submit',async e=>{
+  const f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();
+  const d=Object.fromEntries(new FormData(f)),k=f.dataset.form;
+  if(k==='fnote'){const bd=(MY.boards[shareMode.id]=MY.boards[shareMode.id]||{votes:{},note:''});bd.note=d.n.trim();await writeMy();toast('Sent');render();return}
+  if(k==='watch')S.watch.push({id:uid(),space:sp(),q:d.q.trim(),max:d.max});
+  else if(k==='src'){const id='c'+uid();S.custom.push({id,name:d.name.trim(),url:url(d.url.trim()),cat:+d.cat});S.follows[id]=1}
+  else if(k==='proj')S.projects.push({id:uid(),space:sp(),who:d.who||'',name:d.name.trim(),budget:d.budget,items:[],board:[]});
+  else if(k==='room'){const p=S.projects.find(x=>x.id===proj);Object.assign(p,{rw:d.rw,rl:d.rl,markup:d.markup})}
+  else if(k==='additem'){const p=S.projects.find(x=>x.id===proj);p.items.push({sid:d.sid,slot:d.slot})}
+  else if(k==='pin'){const p=S.projects.find(x=>x.id===proj);p.board.push({id:uid(),type:'pin',url:url(d.u.trim()),cap:''})}
+  else if(k==='note'){const p=S.projects.find(x=>x.id===proj);p.board.push({id:uid(),type:'note',cap:d.t.trim()})}
+  else if(k==='person'){S.people=S.people||[];S.people.push({id:uid(),name:d.name.trim(),notes:(d.notes||'').trim()})}
+  else if(k==='save'){const file=f.querySelector('input[type=file]').files[0];const img=file?await keepImage(file):'';S.saved.unshift({id:uid(),space:sp(),who:d.who||'',size:d.size||'',cond:d.cond||'',title:d.title.trim(),shop:d.shop,price:d.price,dims:d.dims,url:d.url,folder:'Other',type:d.type||guessType(d.title,''),tags:(d.tags||'').split(',').map(x=>x.trim().toLowerCase().replace(/^#/,'')).filter(Boolean),img,status:'Considering',hist:[d.price],ts:Date.now()});toast('Saved')}
+  save();render()});
+document.addEventListener('change',async e=>{
+  const t=e.target;if(!t.dataset)return;
+  if(t.dataset.file==='photo'){photoSearch(t.files[0]);return}
+  if(t.dataset.chg==='addtag'){const i=S.saved.find(x=>x.id===t.dataset.id),v=t.value.trim().toLowerCase().replace(/^#/,'');if(i&&v&&!(i.tags||[]).includes(v)){i.tags=[...(i.tags||[]),v];save();render()}return}
+  if(t.dataset.chg){const i=S.saved.find(x=>x.id===t.dataset.id);if(i){i[t.dataset.chg]=t.value;save();if(t.dataset.chg==='status'||t.dataset.chg==='type')render()}return}
+  if(t.dataset.file!=='board')return;
+  const p=S.projects.find(x=>x.id===proj);if(!p)return;
+  for(const file of t.files){const src=await keepImage(file);if(src)p.board.push({id:uid(),type:'img',src,cap:''})}
+  save();render()});
+async function writeMy(){if(!MYDOC){toast('Open this with contributor or editor access to respond');return}try{await MYDOC.set({json:JSON.stringify(MY)})}catch(e){toast('Could not send your response')}}
+async function vote(k,v){const bd=(MY.boards[shareMode.id]=MY.boards[shareMode.id]||{votes:{},note:''});if(bd.votes[k]===v)delete bd.votes[k];else bd.votes[k]=v;await writeMy();render()}
+async function loadFB(id){const p=S.projects.find(x=>x.id===id);let db;try{db=await claude.use('db')}catch(e){}if(!db)return;
+  try{const q=await db.collection('feedback').get();const out={};q.docs.forEach(d=>{try{const j=JSON.parse(d.data().json),b=j.boards&&j.boards[p.shareId];if(b){Object.entries(b.votes||{}).forEach(([k,v])=>{(out[k]=out[k]||{yes:0,no:0})[v]++});if(b.note)(out._n=out._n||[]).push(b.note)}}catch(e){}});FB=out;toast(q.size?'Responses updated':'No responses yet')}catch(e){toast('Could not load responses')}render()}
+async function doShare(id,btn){
+  const p=S.projects.find(x=>x.id===id);let db;
+  try{db=await claude.use('db')}catch(e){}
+  if(!db){toast('Sharing needs you to be signed in');return}
+  p.shareId=p.shareId||'b'+uid();
+  const snap={name:p.name,budget:p.budget,items:p.items.map(i=>{const x=S.saved.find(s=>s.id===i.sid);return x?{k:x.id,t:x.title,shop:x.shop,price:num(p.markup)?money(mk(p,x)):x.price,dims:x.dims||'',url:x.url,img:(x.img&&x.img.length<60000)?x.img:'',slot:i.slot}:null}).filter(Boolean),board:p.board.filter(m=>m.type!=='img'||(m.src.length<60000)).map(m=>({src:m.type==='img'?m.src:'',cap:m.cap||'',url:m.type==='pin'?m.url:''}))};
+  try{await db.doc('shared/'+p.shareId).set({json:JSON.stringify(snap)});save();
+    const link=location.href.split('#')[0]+'#board-'+p.shareId;
+    $('#shareOut').innerHTML='Copy this link: <b style="user-select:all;word-break:break-all">'+esc(link)+'</b>';
+    try{await navigator.clipboard.writeText(link);toast('Link copied')}catch(e){}
+  }catch(e){toast('Could not publish the board')}}
+async function inquire(id){
+  const x=S.saved.find(i=>i.id===id);let sm;try{sm=await claude.use('sample')}catch(e){}
+  if(!sm){toast('Drafting is not available here');return}
+  Panel={title:'Inquiry to '+(x.shop||'the dealer'),text:'Drafting…'};render();window.scrollTo(0,0);
+  try{const r=await sm(`${sp()==='wear'?'Write a short, polite message from a shopper to a seller asking about this item:':'Write a short, polite email from an interior designer to a dealer asking about this piece:'} ${x.title}${x.shop?' at '+x.shop:''}${x.price?', listed at '+x.price:''}${x.dims?', listed size '+x.dims+' inches':''}. ${sp()==='wear'?'Ask about: availability, exact measurements and the size tag, condition and any flaws or alterations, authenticity and provenance, shipping cost, and return policy. Ask for extra photos.':'Ask about: current availability, exact dimensions, condition and any repairs or restoration, shipping cost and lead time, return policy, and trade discount. Ask for extra photos.'} Under 130 words. Include a subject line. Plain text. Leave [Name] as a placeholder.`,{cache:false});Panel.text=r.text.trim()}
+  catch(e){Panel.text='Could not draft just now. Try again.'}
+  render()}
+async function matchAll(btn){
+  let sm;try{sm=await claude.use('sample')}catch(e){}
+  if(!sm){toast('Scoring is not available here');return}
+  btn.disabled=true;btn.textContent='Scoring…';
+  try{const r=await sm.json(`Score each saved item from 1 to 10 for how well it fits this client's taste. Reply with only a JSON array like [{"id":"abc","score":8,"why":"one short sentence"}].\nLoved names: ${Object.keys(S.loved).join(', ')||'none yet'}\nQuiz mood: ${S.quiz.mood||'n/a'}\nStyle read: ${S.profile||'none yet'}\nItems:\n${SV().map(i=>i.id+' | '+i.title+' | '+(i.shop||'')+' | '+(i.price||'')).join('\n')}`,{cache:false});
+    r.forEach(m=>{const i=S.saved.find(x=>x.id===m.id);if(i)i.match={s:Math.round(num(m.score)),why:String(m.why||'')}});save()}
+  catch(e){toast('Could not score just now')}
+  render()}
+function dataBlob(u){try{const m=u.match(/^data:([^;]+);base64,(.*)$/);const bin=atob(m[2]),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m[1]})}catch(e){return null}}
+async function doImport(){
+  const t=$('#imp').value.trim();if(!t)return;let arr;
+  try{const a=JSON.parse(t);arr=Array.isArray(a)?a:[a]}catch(e){toast('That did not look like extension data');return}
+  for(const x of arr){if(!x||!x.title)continue;let img='';
+    if(String(x.img||'').startsWith('data:image')){const bl=dataBlob(x.img);if(bl)img=await keepImage(bl)}
+    S.saved.unshift({id:uid(),space:sp(),title:String(x.title).slice(0,160),shop:String(x.shop||''),price:String(x.price||''),url:String(x.url||''),dims:String(x.dims||''),folder:FOLDERS.includes(x.folder)?x.folder:'Other',img,status:'Considering',hist:[String(x.price||'')],ts:Date.now()})}
+  save();toast('Imported '+arr.length);render()}
+async function quote(id){
+  const p=S.projects.find(x=>x.id===id);let dl;try{dl=await claude.use('downloads')}catch(e){}
+  if(!dl){toast('Downloads are not available here');return}
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',rows=[['Item','Shop','Room slot','Size (in)','Cost','Client price']];let tc=0,tp=0;
+  p.items.forEach(i=>{const x=S.saved.find(s=>s.id===i.sid);if(!x)return;const c=num(x.price),cp=mk(p,x);tc+=c;tp+=cp;rows.push([x.title,x.shop,i.slot,x.dims,x.price,Math.round(cp)])});
+  rows.push(['Total','','','',Math.round(tc),Math.round(tp)]);
+  try{await dl.save({filename:(p.name.replace(/[^\w ]+/g,'')||'Project')+' quote.csv',data:rows.map(r=>r.map(q).join(',')).join('\n')})}catch(e){}}
+async function analyze(btn){
+  let sm;try{sm=await claude.use('sample')}catch(e){}
+  if(!sm){toast('Style analysis is not available here');return}
+  const loved=Object.keys(S.loved),saved=SV().map(i=>i.title+(i.shop?' ('+i.shop+')':'')),shops=followed().map(s=>s.name);
+  if(!loved.length&&!saved.length){toast('Star a few names or save an item first');return}
+  btn.disabled=true;btn.textContent='Reading…';
+  try{const r=await sm(`You are a ${ROLE()}. From these signals, write a warm 3-paragraph style read for a client (name the style in 2-3 words as the first line, then describe what they respond to, then give 5 specific things to look for when sourcing). Plain text, no markdown.\nLoved designers and brands: ${loved.join(', ')||'none yet'}\nSaved items: ${saved.join('; ')||'none yet'}\nShops they follow: ${shops.join(', ')||'none yet'}\nQuiz mood: ${S.quiz.mood||'n/a'}`,{cache:false});
+    S.profile=r.text.trim();save()}catch(e){toast('Could not reach Claude just now')}
+  render()}
+(async function init(){
+  render();
+  let db=null,user=null;
+  try{db=await claude.use('db');user=await claude.use('user')}catch(e){}
+  const h=location.hash.match(/^#board-(\w+)$/);
+  if(h){shareMode='loading';render();
+    try{const snap=db&&await db.doc('shared/'+h[1]).get();const raw=snap&&(snap.data?snap.data():snap);shareMode=raw&&raw.json?Object.assign(JSON.parse(raw.json),{id:h[1]}):null}catch(e){shareMode=null}
+    MY={boards:{}};try{const u=await user.id();MYDOC=db.doc('feedback/'+u);const m=await MYDOC.get();if(m.exists&&m.data().json)MY=JSON.parse(m.data().json)}catch(e){MYDOC=null}
+    if(!shareMode)shareMode={missing:1};render();return}
+  let loaded=null;
+  if(db&&user){try{const id=await user.id();dbDoc=db.collection('data/users/'+id).doc('app');const snap=await dbDoc.get();const raw=snap&&(snap.data?snap.data():snap);if(raw&&raw.json)loaded=JSON.parse(raw.json)}catch(e){}}
+  if(!loaded)loaded=lsGet();
+  S=Object.assign(blank(),loaded||{});applySpace();
+  if(!loaded){/* first run: seed the owner's examples */
+    S.saved=[{id:uid(),title:'Agra rug in Redwood, 8′ x 10′',shop:'Armadillo',price:'',url:'https://armadillo-co.com/us/shop-all/agra?color=Redwood&size=8%27+x+10%27',folder:'Rugs',img:'',ts:Date.now()},{id:uid(),title:'Gio Ponti style brass mirror',shop:'Incollect',price:'$6,670',url:'',folder:'Furniture',img:'',ts:Date.now()}];
+    ['1stdibs','chairish','oblist','southlooploft','schalling'].forEach(i=>S.follows[i]=1)}
+  ready=true;render();if(!loaded)save()
+})();
+</script>
+
+</body></html>
